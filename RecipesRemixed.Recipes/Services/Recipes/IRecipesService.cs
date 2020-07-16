@@ -14,15 +14,13 @@
 
         Task<bool> Delete(int id);
 
-        Task<IEnumerable<RecipeOutputModel>> GetAll<T>();
+        Task<IEnumerable<RecipeOutputModel>> GetAll();
 
         Task<IEnumerable<RecipeOutputModel>> GetListings(RecipesQuery query);
 
-        Task<IEnumerable<RecipeOutputModel>> Mine(int chefId, RecipesQuery query);
+        Task<IEnumerable<MyRecipeOutputModel>> Mine(int chefId, RecipesQuery query);
 
         Task<RecipeOutputModel> GetDetails(int id);
-
-        IEnumerable<T> GetAll<T>(int? take, int skip);
 
         Task<bool> Modify(RecipesInputModel recipeInput);
 

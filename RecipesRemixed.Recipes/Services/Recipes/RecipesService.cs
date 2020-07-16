@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
+    using AutoMapper.QueryableExtensions;
     using Data;
     using Data.Models;
     using Microsoft.EntityFrameworkCore;
@@ -20,7 +21,7 @@
             : base(db)
             => this.mapper = mapper;
 
-        public async Task<RecipeOutputModel> CreateAsync(RecipesInputModel recipeInput, int chefId)
+        public async Task<RecipeOutputModel> Create(RecipesInputModel recipeInput, int chefId)
         {
             var recipe = new Recipe
             {
@@ -38,9 +39,9 @@
 
             await this.Save(recipe);
 
-            var output = recipe.ProjectTo<RecipeOutputModel>();
+            var output = mapper.Map<Recipe, RecipeOutputModel>(recipe);
 
-            this.GetDetails(recipe.Id);
+            return output;
         }
 
         public async Task<bool> Delete(int id)
@@ -65,28 +66,74 @@
                 .FirstOrDefaultAsync(c => c.Id == id);
 
         public async Task<RecipeOutputModel> GetDetails(int id)
-            => await this.mapper
-                .ProjectTo<RecipeOutputModel>(this.mapper.Where(r=> r.Id == id))
-                .FirstOrDefaultAsync();
+        {
+            var recipe = await this.Data.Recipes.Where(r => r.Id == id).FirstOrDefaultAsync();
 
-        public Task<IEnumerable<RecipeOutputModel>> GetAll<T>()
+            var output = mapper.Map<Recipe, RecipeOutputModel>(recipe);
+
+            return output;
+
+        }
+
+        public async Task<IEnumerable<RecipeOutputModel>> GetListings(RecipesQuery query)
+            => (await this.mapper
+                .ProjectTo<RecipeOutputModel>(this
+                    .GetRecipeQuery(query))
+                .ToListAsync())
+                .Skip((query.Page - 1) * RecipesPerPage)
+                .Take(RecipesPerPage);
+
+        public Task<IEnumerable<RecipeOutputModel>> GetAll()
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<IEnumerable<RecipeOutputModel>> Mine(int chefId, RecipesQuery query)
-        {
-            throw new System.NotImplementedException();
-        }
+        public async Task<IEnumerable<MyRecipeOutputModel>> Mine(int chefId, RecipesQuery query)
+             => (await this.mapper
+                    .ProjectTo<MyRecipeOutputModel>(this
+                        .GetRecipeQuery(query, chefId))
+                    .ToListAsync())
+                    .Skip((query.Page - 1) * RecipesPerPage)
+                    .Take(RecipesPerPage);
 
+        // da vidq modify kak se pravi v controller-a i da go izkaram 
         public Task<bool> Modify(RecipesInputModel recipeInput)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<int> Total(RecipesQuery query)
+        public async Task<int> Total(RecipesQuery query)
+            => await this
+                    .GetRecipeQuery(query)
+                    .CountAsync();
+
+        private IQueryable<Recipe> GetRecipeQuery(
+            RecipesQuery query, int? chefId = null)
         {
-            throw new System.NotImplementedException();
+            var dataQuery = this.Data.Recipes.AsQueryable();
+
+            if (chefId.HasValue)
+            {
+                dataQuery = dataQuery.Where(c => c.ChefId == chefId);
+            }
+
+            if (query.Vegan.HasValue)
+            {
+                dataQuery = dataQuery.Where(c => c.Vegan == query.Vegan);
+            }
+
+            if (query.Vegetarian.HasValue)
+            {
+                dataQuery = dataQuery.Where(c => c.Vegetarian == query.Vegetarian);
+            }
+
+            if (!string.IsNullOrWhiteSpace(query.Ingredients))
+            {
+                dataQuery = dataQuery.Where(c => c
+                    .Ingredients.ToLower().Contains(query.Ingredients.ToLower()));
+            }
+
+            return dataQuery;
         }
     }
 }
