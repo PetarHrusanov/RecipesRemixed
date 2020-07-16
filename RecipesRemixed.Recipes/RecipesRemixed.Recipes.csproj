@@ -11,6 +11,8 @@
     <Folder Include="Services\" />
     <Folder Include="Data\Models\Enums\" />
     <Folder Include="Services\Recipes\" />
+    <Folder Include="Services\Chefs\" />
+    <Folder Include="Models\Chefs\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />

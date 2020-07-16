@@ -1,29 +1,24 @@
-﻿namespace RecipesRemixed.Recipes.Models.Recipes
+﻿using System;
+using System.Collections.Generic;
+
+namespace RecipesRemixed.Recipes.Models.Recipes
 {
-    using AutoMapper;
-    using Data.Models;
-    using RecipesRemixed.Recipes.Data.Models.Enums;
-
-    public class RecipesOutputModel : IMapFrom<Recipe>
+    public class RecipesOutputModel<TRecipeOutputModel>
     {
-        public int Id { get; set; }
+        protected RecipesOutputModel(
+            IEnumerable<TRecipeOutputModel> recipes,
+            int page,
+            int totalPages)
+        {
+            this.Recipes = recipes;
+            this.Page = page;
+            this.TotalPages = totalPages;
+        }
 
-        public string Name { get; set; }
+        public IEnumerable<TRecipeOutputModel> Recipes { get; }
 
-        public string Ingredients { get; set; }
+        public int Page { get; }
 
-        public string Instructions { get; set; }
-
-        public TypeOfDish TypeOfDish { get; set; }
-
-        public string ImageUrl { get; set; }
-
-        public int Calories { get; set; }
-
-        public bool Vegetarian { get; set; }
-
-        public bool Vegan { get; set; }
-
-        public string Allergies { get; set; }
+        public int TotalPages { get; }
     }
 }

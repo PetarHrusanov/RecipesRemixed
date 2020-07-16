@@ -2,28 +2,19 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using CarRentalSystem.Services;
-    using CarRentalSystem.Services.Identity;
-    using Data.Models;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Models.CarAds;
-    using Models.Categories;
-    using Services.CarAds;
-    using Services.Categories;
-    using Services.Dealers;
-    using Services.Manufacturers;
+    using RecipesRemixed.Controllers;
+    using RecipesRemixed.Recipes.Services.Recipes;
+    using RecipesRemixed.Services;
 
-    public class CarAdsController : ApiController
+    public class RecipesController : ApiController
     {
-        private readonly ICarAdService carAds;
+        private readonly IRecipesService recipes;
         private readonly IDealerService dealers;
-        private readonly ICategoryService categories;
-        private readonly IManufacturerService manufacturers;
-        private readonly ICurrentUserService currentUser;
-
-        public CarAdsController(
-            ICarAdService carAds,
+       
+        public RecipesController(
+            IRecipesService recipes,
             IDealerService dealers,
             ICategoryService categories,
             IManufacturerService manufacturers,

@@ -19,7 +19,7 @@
             : base(db)
             => this.mapper = mapper;
 
-        public Task<int> CreateAsync(RecipesInputModel)
+        public Task<int> CreateAsync(RecipesInputModel recipeInput)
         {
             throw new System.NotImplementedException();
         }
@@ -45,7 +45,7 @@
                 .All()
                 .FirstOrDefaultAsync(c => c.Id == id);
 
-        public Task<IEnumerable<RecipesOutputModel>> GetAll<T>()
+        public Task<IEnumerable<RecipeOutputModel>> GetAll<T>()
         {
             throw new System.NotImplementedException();
         }
@@ -65,7 +65,7 @@
             throw new System.NotImplementedException();
         }
 
-        public Task<IEnumerable<RecipesOutputModel>> GetListings(RecipeQuery query)
+        public Task<IEnumerable<RecipeOutputModel>> GetListings(RecipesQuery query)
         {
             throw new System.NotImplementedException();
         }
@@ -75,17 +75,17 @@
             throw new System.NotImplementedException();
         }
 
-        public Task<IEnumerable<RecipesOutputModel>> Mine(int chefId, RecipeQuery query)
+        public Task<IEnumerable<RecipeOutputModel>> Mine(int chefId, RecipesQuery query)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<bool> ModifyAsync(RecipesInputModel)
+        public Task<bool> ModifyAsync(RecipesInputModel recipeInput)
         {
             throw new System.NotImplementedException();
         }
 
-        public Task<int> Total(RecipeQuery)
+        public Task<int> Total(RecipesQuery query)
         {
             throw new System.NotImplementedException();
         }
