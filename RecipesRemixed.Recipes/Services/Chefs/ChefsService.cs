@@ -19,6 +19,20 @@ namespace RecipesRemixed.Recipes.Services.Chefs
             : base(db)
             => this.mapper = mapper;
 
+        public async Task<int> CreateChef (ChefInputModel input, string userId)
+        {
+            var chef = new Chef
+            {
+                Name = input.Name,
+                Qualification = input.Qualification,
+                Biography = input.Biography,
+                UserId = userId
+            };
+
+            await this.Save(chef);
+            return chef.Id;
+        }
+
         public async Task<bool> HasRecipe(int chefId, int recipeId)
             => await this
                 .All()

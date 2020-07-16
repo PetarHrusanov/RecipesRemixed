@@ -8,7 +8,7 @@
 
     public interface IRecipesService : IDataService<Recipe>
     {
-        Task<int> CreateAsync(RecipesInputModel recipeInput);
+        Task<RecipeOutputModel> Create(RecipesInputModel recipeInput, int chefId);
 
         Task<Recipe> Find(int id);
 
@@ -20,16 +20,11 @@
 
         Task<IEnumerable<RecipeOutputModel>> Mine(int chefId, RecipesQuery query);
 
+        Task<RecipeOutputModel> GetDetails(int id);
 
-        IEnumerable<T> GetAllPaginatedAsync<T>(int? take, int skip);
+        IEnumerable<T> GetAll<T>(int? take, int skip);
 
-        Task<int> GetRecipesCountAsync();
-
-        Task<T> GetByIdAsyn<T>(int id);
-
-        Task<T> GetByNameAsync<T>(string name);
-
-        Task<bool> ModifyAsync(RecipesInputModel recipeInput);
+        Task<bool> Modify(RecipesInputModel recipeInput);
 
         Task<int> Total(RecipesQuery query);
 

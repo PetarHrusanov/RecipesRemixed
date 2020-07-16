@@ -11,6 +11,7 @@
 
     public class RecipesService : DataService<Recipe>, IRecipesService
     {
+
         private const int RecipesPerPage = 10;
 
         private readonly IMapper mapper;
@@ -19,9 +20,27 @@
             : base(db)
             => this.mapper = mapper;
 
-        public Task<int> CreateAsync(RecipesInputModel recipeInput)
+        public async Task<RecipeOutputModel> CreateAsync(RecipesInputModel recipeInput, int chefId)
         {
-            throw new System.NotImplementedException();
+            var recipe = new Recipe
+            {
+                Name = recipeInput.Name,
+                Ingredients = recipeInput.Ingredients,
+                Instructions = recipeInput.Instructions,
+                Calories = recipeInput.Calories,
+                Allergies = recipeInput.Allergies,
+                Vegan = recipeInput.Vegan,
+                Vegetarian = recipeInput.Vegetarian,
+                ChefId = chefId,
+                ImageUrl = recipeInput.ImageUrl,
+                TypeOfDish = recipeInput.TypeOfDish,
+            };
+
+            await this.Save(recipe);
+
+            var output = recipe.ProjectTo<RecipeOutputModel>();
+
+            this.GetDetails(recipe.Id);
         }
 
         public async Task<bool> Delete(int id)
@@ -45,32 +64,12 @@
                 .All()
                 .FirstOrDefaultAsync(c => c.Id == id);
 
+        public async Task<RecipeOutputModel> GetDetails(int id)
+            => await this.mapper
+                .ProjectTo<RecipeOutputModel>(this.mapper.Where(r=> r.Id == id))
+                .FirstOrDefaultAsync();
+
         public Task<IEnumerable<RecipeOutputModel>> GetAll<T>()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public IEnumerable<T> GetAllPaginatedAsync<T>(int? take, int skip)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<T> GetByIdAsyn<T>(int id)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<T> GetByNameAsync<T>(string name)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<IEnumerable<RecipeOutputModel>> GetListings(RecipesQuery query)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<int> GetRecipesCountAsync()
         {
             throw new System.NotImplementedException();
         }
@@ -80,7 +79,7 @@
             throw new System.NotImplementedException();
         }
 
-        public Task<bool> ModifyAsync(RecipesInputModel recipeInput)
+        public Task<bool> Modify(RecipesInputModel recipeInput)
         {
             throw new System.NotImplementedException();
         }

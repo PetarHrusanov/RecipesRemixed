@@ -1,81 +1,75 @@
 ﻿namespace RecipesRemixed.Recipes.Controller
 {
     using System.Threading.Tasks;
-    using CarRentalSystem.Services;
-    using CarRentalSystem.Services.Identity;
-    using Data.Models;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Models.Dealers;
-    using Services.Dealers;
     using RecipesRemixed.Controllers;
+    using RecipesRemixed.Recipes.Data.Models;
+    using RecipesRemixed.Recipes.Models.Chefs;
+    using RecipesRemixed.Recipes.Services.Chefs;
+    using RecipesRemixed.Services;
+    using RecipesRemixed.Services.Identity;
 
     public class ChefsController : ApiController
     {
-        private readonly IDealerService dealers;
+        private readonly IChefsService chefs;
         private readonly ICurrentUserService currentUser;
 
-        public DealersController(
-            IDealerService dealers,
+        public ChefsController(
+            IChefsService chefs,
             ICurrentUserService currentUser)
         {
-            this.dealers = dealers;
+            this.chefs = chefs;
             this.currentUser = currentUser;
         }
 
         [HttpGet]
         [Route(Id)]
-        public async Task<ActionResult<DealerDetailsOutputModel>> Details(int id)
-            => await this.dealers.GetDetails(id);
+        public async Task<ActionResult<ChefDetailsOutputModel>> Details(int id)
+            => await this.chefs.GetDetails(id);
 
         [HttpGet]
         [Authorize]
         [Route("Id")]
-        public async Task<ActionResult<int>> GetDealerId()
+        public async Task<ActionResult<int>> GetChefId()
         {
             var userId = this.currentUser.UserId;
 
-            var userIsDealer = await this.dealers.IsDealer(userId);
+            var userIsDealer = await this.chefs.IsChef(userId);
 
             if (!userIsDealer)
             {
                 return this.BadRequest("This user is not a dealer.");
             }
 
-            return await this.dealers.GetIdByUser(this.currentUser.UserId);
+            return await this.chefs.GetIdByUser(this.currentUser.UserId);
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> Create(CreateDealerInputModel input)
+        public async Task<ActionResult> Create(ChefInputModel input,string userId)
         {
-            var dealer = new Dealer
-            {
-                Name = input.Name,
-                PhoneNumber = input.PhoneNumber,
-                UserId = this.currentUser.UserId
-            };
-
-            await this.dealers.Save(dealer);
-
+            await this.chefs.CreateChef(input, userId);
             return Ok();
         }
 
         [HttpPut]
         [Route(Id)]
-        public async Task<ActionResult> Edit(int id, EditDealerInputModel input)
+        public async Task<ActionResult> Edit(int id, ChefInputModel input)
         {
-            var dealer = await this.dealers.FindByUser(this.currentUser.UserId);
+            var chef = await this.chefs.FindByUser(this.currentUser.UserId);
 
-            if (id != dealer.Id)
+            if (id != chef.Id)
             {
                 return BadRequest(Result.Failure("You cannot edit this dealer."));
             }
 
-            dealer.Name = input.Name;
-            dealer.PhoneNumber = input.PhoneNumber;
+            // eventualno da iznesa tazi logika v service
+            chef.Name = input.Name;
+            chef.Qualification = input.Qualification;
+            chef.Biography = input.Biography;
 
-            await this.dealers.Save(dealer);
+            await this.chefs.Save(chef);
 
             return Ok();
         }

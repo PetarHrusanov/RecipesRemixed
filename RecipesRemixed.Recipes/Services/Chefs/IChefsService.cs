@@ -7,6 +7,8 @@
    
     public interface IChefsService : IDataService<Chef>
     {
+        Task<int> CreateChef(ChefInputModel input, string userId); 
+
         Task<Chef> FindByUser(string userId);
 
         Task<int> GetIdByUser(string userId);

@@ -5,83 +5,51 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using RecipesRemixed.Controllers;
+    using RecipesRemixed.Recipes.Models.Recipes;
+    using RecipesRemixed.Recipes.Services.Chefs;
     using RecipesRemixed.Recipes.Services.Recipes;
     using RecipesRemixed.Services;
+    using RecipesRemixed.Services.Identity;
 
     public class RecipesController : ApiController
     {
         private readonly IRecipesService recipes;
-        private readonly IDealerService dealers;
-       
+        private readonly IChefsService chefs;
+        private readonly ICurrentUserService currentUser;
+
         public RecipesController(
             IRecipesService recipes,
-            IDealerService dealers,
-            ICategoryService categories,
-            IManufacturerService manufacturers,
+            IChefsService chefs,
             ICurrentUserService currentUser)
         {
-            this.carAds = carAds;
-            this.dealers = dealers;
-            this.categories = categories;
-            this.manufacturers = manufacturers;
+            this.recipes = recipes;
+            this.chefs = chefs;
             this.currentUser = currentUser;
         }
 
         [HttpGet]
-        public async Task<ActionResult<SearchCarAdsOutputModel>> Search(
-            [FromQuery] CarAdsQuery query)
+        public async Task<ActionResult<RecipesSearchOutputModel>> Search(
+            [FromQuery] RecipesQuery query)
         {
-            var carAdListings = await this.carAds.GetListings(query);
+            var carAdListings = await this.recipes.GetListings(query);
 
-            var totalPages = await this.carAds.Total(query);
+            var totalPages = await this.recipes.Total(query);
 
-            return new SearchCarAdsOutputModel(carAdListings, query.Page, totalPages);
+            return new RecipesSearchOutputModel(carAdListings, query.Page, totalPages);
         }
 
         [HttpGet]
         [Route(Id)]
-        public async Task<ActionResult<CarAdDetailsOutputModel>> Details(int id)
-            => await this.carAds.GetDetails(id);
+        public async Task<ActionResult<RecipeOutputModel>> Details(int id)
+            => await this.recipes.(id);
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<CreateCarAdOutputModel>> Create(CarAdInputModel input)
+        public async Task<ActionResult<RecipeOutputModel>> Create(RecipesInputModel input)
         {
-            var dealer = await this.dealers.FindByUser(this.currentUser.UserId);
+            var dealer = await this.chefs.FindByUser(this.currentUser.UserId);
 
-            var category = await this.categories.Find(input.Category);
 
-            if (category == null)
-            {
-                return BadRequest(Result.Failure("Category does not exist."));
-            }
-
-            var manufacturer = await this.manufacturers.FindByName(input.Manufacturer);
-
-            manufacturer ??= new Manufacturer
-            {
-                Name = input.Manufacturer
-            };
-
-            var carAd = new CarAd
-            {
-                Dealer = dealer,
-                Manufacturer = manufacturer,
-                Model = input.Model,
-                Category = category,
-                ImageUrl = input.ImageUrl,
-                PricePerDay = input.PricePerDay,
-                Options = new Options
-                {
-                    HasClimateControl = input.HasClimateControl,
-                    NumberOfSeats = input.NumberOfSeats,
-                    TransmissionType = input.TransmissionType
-                }
-            };
-
-            await this.carAds.Save(carAd);
-
-            return new CreateCarAdOutputModel(carAd.Id);
         }
 
         [HttpPut]
