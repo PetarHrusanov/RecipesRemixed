@@ -2,20 +2,21 @@
 {
     using System;
     using System.Threading.Tasks;
-    using static RecipesRemixed.Recipes.Data.DataConstants;
-
+    using RecipesRemixed.Recipes.Data.Models;
+    using RecipesRemixed.Recipes.Models.Chefs;
+   
     public interface IChefsService : IDataService<Chef>
     {
         Task<Chef> FindByUser(string userId);
 
         Task<int> GetIdByUser(string userId);
 
-        Task<bool> HasCarAd(int dealerId, int carAdId);
+        Task<bool> HasRecipe(int chefId, int recipeId);
 
-        Task<bool> IsDealer(string userId);
+        Task<bool> IsChef(string userId);
 
-        Task<DealerDetailsOutputModel> GetDetails(int id);
+        Task<ChefDetailsOutputModel> GetDetails(int id);
 
-        Task<DealerOutputModel> GetDetailsByCarId(int carAdId);
+        Task<ChefOutputModel> GetDetailsByRecipeId(int recipeId);
     }
 }
