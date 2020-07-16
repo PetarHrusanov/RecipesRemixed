@@ -1,14 +1,12 @@
 namespace RecipesRemixed.Recipes
 {
-    using System.Reflection;
-    using AutoMapper;
-    using Data;
     using Infrastructure;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using RecipesRemixed.Infrastructure;
+    using RecipesRemixed.Recipes.Data;
     using RecipesRemixed.Recipes.Services.Chefs;
     using RecipesRemixed.Recipes.Services.Recipes;
 
@@ -22,14 +20,13 @@ namespace RecipesRemixed.Recipes
         public void ConfigureServices(IServiceCollection services)
             => services
                 .AddWebService<RecipesDbContext>(this.Configuration)
-                .AddAutoMapper(Assembly.GetExecutingAssembly())
-                .AddTransient<IRecipesService, RecipesService>()
-                .AddTransient<IChefsService, ChefsService>();
+                //.AddTransient<IDataSeeder, DealersDataSeeder>()
+                .AddTransient<IChefsService, ChefsService>()
+                .AddTransient<IRecipesService, RecipesService>();
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
             => app
                 .UseWebService(env)
-                .Initialize()
-                .SeedData();
+                .Initialize();
     }
 }
