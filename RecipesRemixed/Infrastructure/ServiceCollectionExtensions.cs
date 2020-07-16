@@ -1,12 +1,15 @@
 ﻿namespace RecipesRemixed.Infrastructure
 {
+    using System;
+    using System.Reflection;
     using System.Text;
+    using AutoMapper;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.IdentityModel.Tokens;
-    using RecipesRemixed;
+    using Models;
     using Services.Identity;
 
     public static class ServiceCollectionExtensions
@@ -20,6 +23,7 @@
                 .AddDatabase<TDbContext>(configuration)
                 .AddApplicationSettings(configuration)
                 .AddTokenAuthentication(configuration)
+                .AddAutoMapperProfile(Assembly.GetCallingAssembly())
                 .AddControllers();
 
             return services;
@@ -38,8 +42,9 @@
             this IServiceCollection services,
             IConfiguration configuration)
             => services
-                .Configure<ApplicationSettings>(configuration
-                    .GetSection(nameof(ApplicationSettings)));
+                .Configure<ApplicationSettings>(
+                    configuration.GetSection(nameof(ApplicationSettings)), 
+                    config => config.BindNonPublicProperties = true);
 
         public static IServiceCollection AddTokenAuthentication(
             this IServiceCollection services,
@@ -75,5 +80,14 @@
 
             return services;
         }
+
+        public static IServiceCollection AddAutoMapperProfile(
+            this IServiceCollection services,
+            Assembly assembly)
+            => services
+                .AddAutoMapper(
+                    (_, config) => config
+                        .AddProfile(new MappingProfile(assembly)),
+                    Array.Empty<Assembly>());
     }
 }

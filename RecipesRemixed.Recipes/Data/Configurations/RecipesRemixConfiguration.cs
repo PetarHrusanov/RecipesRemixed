@@ -60,14 +60,8 @@
                 .WithMany(c => c.RecipesRemix)
                 .HasForeignKey(c => c.ChefId)
                 .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.NoAction);
 
-            builder
-                .HasOne(d => d.Recipe)
-                .WithMany(c => c.RecipesRemix)
-                .HasForeignKey(c => c.RecipeId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

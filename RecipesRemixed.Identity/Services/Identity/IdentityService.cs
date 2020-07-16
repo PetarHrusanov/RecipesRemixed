@@ -2,10 +2,10 @@
 {
     using System.Linq;
     using System.Threading.Tasks;
-    using RecipesRemixed.Services;
     using Data.Models;
     using Microsoft.AspNetCore.Identity;
     using Models.Identity;
+    using RecipesRemixed.Services;
 
     public class IdentityService : IIdentityService
     {
@@ -14,7 +14,9 @@
         private readonly UserManager<User> userManager;
         private readonly ITokenGeneratorService jwtTokenGenerator;
 
-        public IdentityService(UserManager<User> userManager, ITokenGeneratorService jwtTokenGenerator)
+        public IdentityService(
+            UserManager<User> userManager,
+            ITokenGeneratorService jwtTokenGenerator)
         {
             this.userManager = userManager;
             this.jwtTokenGenerator = jwtTokenGenerator;
@@ -51,13 +53,15 @@
                 return InvalidErrorMessage;
             }
 
-            var token = this.jwtTokenGenerator.GenerateToken(user);
+            var roles = await this.userManager.GetRolesAsync(user);
+
+            var token = this.jwtTokenGenerator.GenerateToken(user, roles);
 
             return new UserOutputModel(token);
         }
 
         public async Task<Result> ChangePassword(
-            string userId, 
+            string userId,
             ChangePasswordInputModel changePasswordInput)
         {
             var user = await this.userManager.FindByIdAsync(userId);
