@@ -3,12 +3,15 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
+    using AutoMapper;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
+    using RecipesRemixed.Recipes.Services.Identity;
     using Refit;
 
     public abstract class HandleController : Controller
     {
+
         protected async Task<ActionResult> Handle(Func<Task> action, ActionResult success, ActionResult failure)
         {
             try
