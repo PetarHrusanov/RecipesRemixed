@@ -4,11 +4,11 @@
     using System.Linq;
     using System.Threading.Tasks;
     using AutoMapper;
-    using AutoMapper.QueryableExtensions;
     using Data;
     using Data.Models;
     using Microsoft.EntityFrameworkCore;
     using RecipesRemixed.Recipes.Models.Recipes;
+    using RecipesRemixed.Services;
 
     public class RecipesService : DataService<Recipe>, IRecipesService
     {
@@ -46,14 +46,14 @@
 
         public async Task<bool> Delete(int id)
         {
-            var carAd = await this.Data.Recipes.FindAsync(id);
+            var carAd = await this.Data.Set<Recipe>().FindAsync(id);
 
             if (carAd == null)
             {
                 return false;
             }
 
-            this.Data.Recipes.Remove(carAd);
+            this.Data.Set<Recipe>().Remove(carAd);
 
             await this.Data.SaveChangesAsync();
 
@@ -67,7 +67,7 @@
 
         public async Task<RecipeOutputModel> GetDetails(int id)
         {
-            var recipe = await this.Data.Recipes.Where(r => r.Id == id).FirstOrDefaultAsync();
+            var recipe = await this.Data.Set<Recipe>().Where(r => r.Id == id).FirstOrDefaultAsync();
 
             var output = mapper.Map<Recipe, RecipeOutputModel>(recipe);
 
@@ -88,8 +88,16 @@
         //        .ProjectTo<RecipeOutputModel>(this.All())
         //        .ToListAsync());
 
-        public async Task<IEnumerable<Recipe>> GetAll()
-        => this.All();
+        public async Task<IEnumerable<RecipeOutputModel>> GetAll()
+        {
+            var list = await  this.Data.Set<Recipe>().ToListAsync();
+            List<RecipeOutputModel> result = this.mapper.Map<List<Recipe>, List<RecipeOutputModel>>(list);
+            //var result = this.mapper
+            //        .ProjectTo<RecipeOutputModel>(this.Data.Set<Recipe>());
+
+            return result;
+        }
+            
 
 
 
@@ -116,7 +124,7 @@
         private IQueryable<Recipe> GetRecipeQuery(
             RecipesQuery query, int? chefId = null)
         {
-            var dataQuery = this.Data.Recipes.AsQueryable();
+            var dataQuery = this.All();
 
             if (chefId.HasValue)
             {

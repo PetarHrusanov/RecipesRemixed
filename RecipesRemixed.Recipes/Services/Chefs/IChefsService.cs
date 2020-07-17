@@ -4,7 +4,8 @@
     using System.Threading.Tasks;
     using RecipesRemixed.Recipes.Data.Models;
     using RecipesRemixed.Recipes.Models.Chefs;
-   
+    using RecipesRemixed.Services;
+
     public interface IChefsService : IDataService<Chef>
     {
         Task<int> CreateChef(ChefInputModel input, string userId); 

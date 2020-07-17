@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using RecipesRemixed.Recipes.Data.Models;
     using RecipesRemixed.Recipes.Models.Recipes;
+    using RecipesRemixed.Services;
 
     public interface IRecipesService : IDataService<Recipe>
     {
@@ -14,7 +15,7 @@
 
         Task<bool> Delete(int id);
 
-        Task<IEnumerable<Recipe>> GetAll();
+        Task<IEnumerable<RecipeOutputModel>> GetAll();
 
         Task<IEnumerable<RecipeOutputModel>> GetListings(RecipesQuery query);
 

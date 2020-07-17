@@ -7,6 +7,6 @@
     public class RecipesAllViewModel
     {
         // da opravq
-        public IEnumerable<Recipe> Recipes { get; set; } 
+        public IEnumerable<RecipeOutputModel> Recipes { get; set; } 
     }
 }

@@ -10,6 +10,7 @@ namespace RecipesRemixed.Recipes.Services.Chefs
     using Data.Models;
     using Microsoft.EntityFrameworkCore;
     using RecipesRemixed.Recipes.Models.Chefs;
+    using RecipesRemixed.Services;
 
     public class ChefsService : DataService<Chef>, IChefsService
     {
@@ -71,8 +72,7 @@ namespace RecipesRemixed.Recipes.Services.Chefs
             Expression<Func<Chef, T>> selector)
         {
             var chefData = await this
-                .Data
-                .Chefs
+                .Data.Set<Chef>()
                 .Where(u => u.UserId == userId)
                 .Select(selector)
                 .FirstOrDefaultAsync();
