@@ -19,17 +19,37 @@ namespace RecipesRemixed.Recipes
         public IConfiguration Configuration { get; }
 
         public void ConfigureServices(IServiceCollection services)
-            => services
-                .AddWebService<RecipesDbContext>(this.Configuration)
-                //.AddTransient<IDataSeeder, DealersDataSeeder>()
-                .AddTransient<IChefsService, ChefsService>()
-                .AddTransient<IRecipesService, RecipesService>()
-                .AddControllersWithViews(options => options
-                    .Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
+        {
+            services
+                  .AddWebService<RecipesDbContext>(this.Configuration)
+                  //.AddTransient<IDataSeeder, DealersDataSeeder>()
+                  .AddTransient<IChefsService, ChefsService>()
+                  .AddTransient<IRecipesService, RecipesService>()
+                  .AddControllersWithViews(options => options
+                      .Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
+
+            services.AddRazorPages();
+        }
+
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-            => app
-                .UseWebService(env)
-                .Initialize();
+        {
+            app
+                  .UseWebService(env)
+                  .Initialize();
+
+            app
+                .UseHttpsRedirection()
+                .UseStaticFiles()
+                .UseRouting()
+                //.UseJwtCookieAuthentication()
+                //.UseAuthorization()
+                .UseEndpoints(endpoints => endpoints
+                    .MapDefaultControllerRoute());
+        }
+
+
+
+
     }
 }
