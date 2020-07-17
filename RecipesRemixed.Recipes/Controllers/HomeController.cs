@@ -1,14 +1,17 @@
 ﻿namespace RecipesRemixed.Recipes.Controllers
 {
+    using System;
     using System.Diagnostics;
     using System.Threading.Tasks;
     using AutoMapper;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using RecipesRemixed.Recipes.Data.Models;
     using RecipesRemixed.Recipes.Models.Identity;
     using RecipesRemixed.Recipes.Services.Identity;
+    using static RecipesRemixed.Infrastructure.InfrastructureConstants;
 
-    public class HomeController : Controller
+    public class HomeController : HandleController
     {
 
         private readonly IIdentityService identityService;
@@ -33,10 +36,30 @@
             return this.View();
         }
 
+        [HttpGet]
         public async Task<IActionResult> Login()
-        {
-            return this.View();
-        }
+            => this.View();
+
+        [HttpPost]
+        public async Task<IActionResult> Login(UserInputModel model)
+        => await this.Handle(
+                async () =>
+                {
+                    var result = await this.identityService
+                        .Login(this.mapper.Map<UserInputModel>(model));
+
+                    this.Response.Cookies.Append(
+                        AuthenticationCookieName,
+                        result.Token,
+                        new CookieOptions
+                        {
+                            HttpOnly = true,
+                            Secure = true,
+                            MaxAge = TimeSpan.FromDays(1)
+                        });
+                },
+                success: RedirectToAction("Index"),
+                failure: View("../Home/Index", model));
 
         [HttpGet]
         public async Task<IActionResult> Register()
@@ -48,7 +71,9 @@
         public async Task<IActionResult> Register(UserInputModel user)
         {
             await this.identityService.Register(user);
+
             return this.RedirectToAction("Index");
+
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
