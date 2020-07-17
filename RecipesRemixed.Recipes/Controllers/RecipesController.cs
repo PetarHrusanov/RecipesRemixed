@@ -61,6 +61,7 @@
         {
             var chef = await this.chefs.FindByUser(this.currentUser.UserId);
             return await this.recipes.Create(input, chef.Id);
+            return this.View();
 
         }
 

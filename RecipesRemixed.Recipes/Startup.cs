@@ -8,8 +8,11 @@ namespace RecipesRemixed.Recipes
     using Microsoft.Extensions.DependencyInjection;
     using RecipesRemixed.Infrastructure;
     using RecipesRemixed.Recipes.Data;
+    using RecipesRemixed.Recipes.Services;
     using RecipesRemixed.Recipes.Services.Chefs;
+    using RecipesRemixed.Recipes.Services.Identity;
     using RecipesRemixed.Recipes.Services.Recipes;
+    using Refit;
 
     public class Startup
     {
@@ -20,6 +23,10 @@ namespace RecipesRemixed.Recipes
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var serviceEndpoints = this.Configuration
+                .GetSection(nameof(ServiceEndpoints))
+                .Get<ServiceEndpoints>(config => config.BindNonPublicProperties = true);
+
             services
                   .AddWebService<RecipesDbContext>(this.Configuration)
                   //.AddTransient<IDataSeeder, DealersDataSeeder>()
@@ -27,6 +34,18 @@ namespace RecipesRemixed.Recipes
                   .AddTransient<IRecipesService, RecipesService>()
                   .AddControllersWithViews(options => options
                       .Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
+
+            services
+                .AddRefitClient<IIdentityService>()
+                .WithConfiguration(serviceEndpoints.Identity);
+
+            //services
+            //    .AddRefitClient<IStatisticsService>()
+            //    .WithConfiguration(serviceEndpoints.Statistics);
+
+            //services
+            //    .AddRefitClient<IDealersService>()
+            //    .WithConfiguration(serviceEndpoints.Dealers);
 
             services.AddRazorPages();
         }
