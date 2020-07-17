@@ -83,10 +83,16 @@
                 .Skip((query.Page - 1) * RecipesPerPage)
                 .Take(RecipesPerPage);
 
-        public Task<IEnumerable<RecipeOutputModel>> GetAll()
-        {
-            throw new System.NotImplementedException();
-        }
+        //public async Task<IEnumerable<RecipeOutputModel>> GetAll()
+        //=> (await this.mapper
+        //        .ProjectTo<RecipeOutputModel>(this.All())
+        //        .ToListAsync());
+
+        public async Task<IEnumerable<Recipe>> GetAll()
+        => this.All();
+
+
+
 
         public async Task<IEnumerable<MyRecipeOutputModel>> Mine(int chefId, RecipesQuery query)
              => (await this.mapper

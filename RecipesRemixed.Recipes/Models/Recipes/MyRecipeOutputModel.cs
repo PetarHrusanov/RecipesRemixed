@@ -33,7 +33,7 @@
 
         public virtual void Mapping(Profile mapper)
             => mapper
-                .CreateMap<Recipe, RecipeOutputModel>()
+                .CreateMap<Recipe, MyRecipeOutputModel>()
                 .ForMember(ad => ad.ChefName, cfg => cfg
                     .MapFrom(ad => ad.Chef.Name));
     }

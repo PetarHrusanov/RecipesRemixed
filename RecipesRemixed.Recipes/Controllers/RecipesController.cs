@@ -11,7 +11,7 @@
     using RecipesRemixed.Services;
     using RecipesRemixed.Services.Identity;
 
-    public class RecipesController : ApiController
+    public class RecipesController : Controller
     {
         private readonly IRecipesService recipes;
         private readonly IChefsService chefs;
@@ -27,6 +27,18 @@
             this.currentUser = currentUser;
         }
 
+        public async Task<IActionResult> IndexAsync()
+        {
+
+            var recipeList = new RecipesAllViewModel
+            {
+                Recipes = await this.recipes.GetAll()
+            };
+
+            return this.View(recipeList);
+        }
+
+
         [HttpGet]
         public async Task<ActionResult<RecipesSearchOutputModel>> Search(
             [FromQuery] RecipesQuery query)
@@ -39,7 +51,7 @@
         }
 
         [HttpGet]
-        [Route(Id)]
+        //[Route(Id)]
         public async Task<ActionResult<RecipeOutputModel>> Details(int id)
             => await this.recipes.GetDetails(id);
 
@@ -55,7 +67,7 @@
         // eventualno da go izkaram v service
         [HttpPut]
         [Authorize]
-        [Route(Id)]
+        //[Route(Id)]
         public async Task<ActionResult> Edit(int id, RecipesInputModel input)
         {
             var chefId = await this.chefs.GetIdByUser(this.currentUser.UserId);
@@ -85,7 +97,7 @@
 
         [HttpDelete]
         [Authorize]
-        [Route(Id)]
+        //[Route(Id)]
         public async Task<ActionResult<bool>> Delete(int id)
         {
             var chefId = await this.chefs.GetIdByUser(this.currentUser.UserId);
