@@ -36,7 +36,6 @@
         }
 
         [HttpPost]
-        [Route(nameof(Login))]
         public async Task<ActionResult<UserOutputModel>> Login(UserInputModel input)
         {
             var result = await this.identity.Login(input);
