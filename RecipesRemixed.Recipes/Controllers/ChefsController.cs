@@ -10,7 +10,7 @@
     using RecipesRemixed.Services;
     using RecipesRemixed.Services.Identity;
 
-    public class ChefsController : ApiController
+    public class ChefsController : Controller
     {
         private readonly IChefsService chefs;
         private readonly ICurrentUserService currentUser;
@@ -24,9 +24,12 @@
         }
 
         [HttpGet]
-        [Route(Id)]
         public async Task<ActionResult<ChefDetailsOutputModel>> Details(int id)
-            => await this.chefs.GetDetails(id);
+        {
+            var chef = await this.chefs.GetDetails(id);
+            return this.View(chef);
+        }
+            
 
         [HttpGet]
         [Authorize]
@@ -54,7 +57,6 @@
         }
 
         [HttpPut]
-        [Route(Id)]
         public async Task<ActionResult> Edit(int id, ChefInputModel input)
         {
             var chef = await this.chefs.FindByUser(this.currentUser.UserId);
