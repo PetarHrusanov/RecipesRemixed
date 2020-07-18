@@ -9,7 +9,6 @@
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.IdentityModel.Tokens;
-    using Models;
     using Services.Identity;
 
     public static class ServiceCollectionExtensions
@@ -23,7 +22,7 @@
                 .AddDatabase<TDbContext>(configuration)
                 .AddApplicationSettings(configuration)
                 .AddTokenAuthentication(configuration)
-                .AddAutoMapperProfile(Assembly.GetCallingAssembly())
+                //.AddAutoMapperProfile(Assembly.GetCallingAssembly())
                 .AddControllers();
 
             return services;
@@ -81,13 +80,13 @@
             return services;
         }
 
-        public static IServiceCollection AddAutoMapperProfile(
-            this IServiceCollection services,
-            Assembly assembly)
-            => services
-                .AddAutoMapper(
-                    (_, config) => config
-                        .AddProfile(new MappingProfile(assembly)),
-                    Array.Empty<Assembly>());
+        //public static IServiceCollection AddAutoMapperProfile(
+        //    this IServiceCollection services,
+        //    Assembly assembly)
+        //    => services
+        //        .AddAutoMapper(
+        //            (_, config) => config
+        //                .AddProfile(new MappingProfile(assembly)),
+        //            Array.Empty<Assembly>());
     }
 }

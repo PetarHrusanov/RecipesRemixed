@@ -33,7 +33,7 @@
                 async () =>
                 {
                     var result = await this.identityService
-                        .Login(this.mapper.Map<UserInputModel>(model));
+                        .Login(model);
 
                     this.Response.Cookies.Append(
                         AuthenticationCookieName,

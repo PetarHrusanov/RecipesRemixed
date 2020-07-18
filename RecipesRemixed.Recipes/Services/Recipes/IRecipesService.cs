@@ -15,7 +15,7 @@
 
         Task<bool> Delete(int id);
 
-        Task<IEnumerable<RecipeOutputModel>> GetAll();
+        Task<IEnumerable<T>> GetAll<T>();
 
         Task<IEnumerable<RecipeOutputModel>> GetListings(RecipesQuery query);
 

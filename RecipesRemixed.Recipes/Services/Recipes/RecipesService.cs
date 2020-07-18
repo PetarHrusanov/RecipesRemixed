@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using AutoMapper;
+    using RecipesRemixed.Services.Mapping;
     using Data;
     using Data.Models;
     using Microsoft.EntityFrameworkCore;
@@ -15,11 +15,11 @@
 
         private const int RecipesPerPage = 10;
 
-        private readonly IMapper mapper;
+        public RecipesService(RecipesDbContext db)
+        : base(db)
+        {
 
-        public RecipesService(RecipesDbContext db, IMapper mapper)
-            : base(db)
-            => this.mapper = mapper;
+        }
 
         public async Task<RecipeOutputModel> Create(RecipesInputModel recipeInput, int chefId)
         {
@@ -38,8 +38,7 @@
             };
 
             await this.Save(recipe);
-
-            var output = mapper.Map<Recipe, RecipeOutputModel>(recipe);
+            var output = await this.Data.Set<Recipe>().Where(r => r.Id == recipe.Id).To<RecipeOutputModel>().FirstOrDefaultAsync();
 
             return output;
         }
@@ -67,48 +66,47 @@
 
         public async Task<RecipeOutputModel> GetDetails(int id)
         {
-            var recipe = await this.Data.Set<Recipe>().Where(r => r.Id == id).FirstOrDefaultAsync();
-
-            var output = mapper.Map<Recipe, RecipeOutputModel>(recipe);
-
-            return output;
+            var recipe = await this.All().Where(r => r.Id == id).To<RecipeOutputModel>().FirstOrDefaultAsync();
+            return recipe;
 
         }
 
         public async Task<IEnumerable<RecipeOutputModel>> GetListings(RecipesQuery query)
-            => (await this.mapper
-                .ProjectTo<RecipeOutputModel>(this
-                    .GetRecipeQuery(query))
-                .ToListAsync())
-                .Skip((query.Page - 1) * RecipesPerPage)
-                .Take(RecipesPerPage);
-
-        //public async Task<IEnumerable<RecipeOutputModel>> GetAll()
-        //=> (await this.mapper
-        //        .ProjectTo<RecipeOutputModel>(this.All())
-        //        .ToListAsync());
-
-        public async Task<IEnumerable<RecipeOutputModel>> GetAll()
         {
-            var list = await  this.Data.Set<Recipe>().ToListAsync();
-            List<RecipeOutputModel> result = this.mapper.Map<List<Recipe>, List<RecipeOutputModel>>(list);
+            //=> (await this.mapper
+            //    .ProjectTo<RecipeOutputModel>(this
+            //        .GetRecipeQuery(query))
+            //    .ToListAsync())
+            //    .Skip((query.Page - 1) * RecipesPerPage)
+            //    .Take(RecipesPerPage);
+
+            throw new System.NotImplementedException();
+        }
+
+        public async Task<IEnumerable<T>> GetAll<T>()
+        {
+            var list = await Data.Set<Recipe>().To<T>().ToListAsync();
+            //List<RecipeOutputModel> result = this.mapper.Map<List<Recipe>, List<RecipeOutputModel>>(list);
             //var result = this.mapper
             //        .ProjectTo<RecipeOutputModel>(this.Data.Set<Recipe>());
 
-            return result;
+            return list;
         }
-            
-
-
-
 
         public async Task<IEnumerable<MyRecipeOutputModel>> Mine(int chefId, RecipesQuery query)
-             => (await this.mapper
-                    .ProjectTo<MyRecipeOutputModel>(this
-                        .GetRecipeQuery(query, chefId))
-                    .ToListAsync())
-                    .Skip((query.Page - 1) * RecipesPerPage)
-                    .Take(RecipesPerPage);
+        {
+            //=> (await this.mapper
+            //       .ProjectTo<MyRecipeOutputModel>(this
+            //           .GetRecipeQuery(query, chefId))
+            //       .ToListAsync())
+            //       .Skip((query.Page - 1) * RecipesPerPage)
+            //       .Take(RecipesPerPage);
+
+            var recipes = await this.GetRecipeQuery(query, chefId).To<RecipeOutputModel>().ToListAsync();
+
+            return (IEnumerable<MyRecipeOutputModel>)recipes;
+
+        }
 
         // da vidq modify kak se pravi v controller-a i da go izkaram 
         public Task<bool> Modify(RecipesInputModel recipeInput)

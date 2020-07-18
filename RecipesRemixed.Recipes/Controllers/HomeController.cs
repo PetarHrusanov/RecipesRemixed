@@ -3,7 +3,6 @@
     using System;
     using System.Diagnostics;
     using System.Threading.Tasks;
-    using AutoMapper;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using RecipesRemixed.Recipes.Data.Models;
@@ -15,14 +14,11 @@
     {
 
         private readonly IIdentityService identityService;
-        private readonly IMapper mapper;
 
         public HomeController(
-                    IIdentityService identityService,
-                    IMapper mapper)
+                    IIdentityService identityService)
         {
             this.identityService = identityService;
-            this.mapper = mapper;
         }
 
         public async Task<IActionResult> Index()

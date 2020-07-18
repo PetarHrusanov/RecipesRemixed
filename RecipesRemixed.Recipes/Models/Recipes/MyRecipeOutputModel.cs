@@ -1,7 +1,6 @@
 ﻿namespace RecipesRemixed.Recipes.Models.Recipes
 {
     using System;
-    using AutoMapper;
     using RecipesRemixed.Recipes.Data.Models;
     using RecipesRemixed.Recipes.Data.Models.Enums;
 
@@ -31,10 +30,10 @@
 
         public string ChefName { get; set; }
 
-        public virtual void Mapping(Profile mapper)
-            => mapper
-                .CreateMap<Recipe, MyRecipeOutputModel>()
-                .ForMember(ad => ad.ChefName, cfg => cfg
-                    .MapFrom(ad => ad.Chef.Name));
+        //public virtual void Mapping(Profile mapper)
+        //    => mapper
+        //        .CreateMap<Recipe, MyRecipeOutputModel>()
+        //        .ForMember(ad => ad.ChefName, cfg => cfg
+        //            .MapFrom(ad => ad.Chef.Name));
     }
 }

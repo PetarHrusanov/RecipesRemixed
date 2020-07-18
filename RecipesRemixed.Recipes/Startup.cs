@@ -1,5 +1,6 @@
 namespace RecipesRemixed.Recipes
 {
+    using System.Reflection;
     using Infrastructure;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -8,10 +9,12 @@ namespace RecipesRemixed.Recipes
     using Microsoft.Extensions.DependencyInjection;
     using RecipesRemixed.Infrastructure;
     using RecipesRemixed.Recipes.Data;
+    using RecipesRemixed.Recipes.Data.Models;
     using RecipesRemixed.Recipes.Services;
     using RecipesRemixed.Recipes.Services.Chefs;
     using RecipesRemixed.Recipes.Services.Identity;
     using RecipesRemixed.Recipes.Services.Recipes;
+    using RecipesRemixed.Services.Mapping;
     using Refit;
 
     public class Startup
@@ -53,6 +56,9 @@ namespace RecipesRemixed.Recipes
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+            AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
+
             app
                   .UseWebService(env)
                   .Initialize();

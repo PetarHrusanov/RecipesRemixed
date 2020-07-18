@@ -11,14 +11,16 @@ namespace RecipesRemixed.Recipes.Services.Chefs
     using Microsoft.EntityFrameworkCore;
     using RecipesRemixed.Recipes.Models.Chefs;
     using RecipesRemixed.Services;
+    using RecipesRemixed.Services.Mapping;
 
     public class ChefsService : DataService<Chef>, IChefsService
     {
-        private readonly IMapper mapper;
 
-        public ChefsService(RecipesDbContext db, IMapper mapper)
+        public ChefsService(RecipesDbContext db)
             : base(db)
-            => this.mapper = mapper;
+        {
+        }
+
 
         public async Task<int> CreateChef (ChefInputModel input, string userId)
         {
@@ -46,19 +48,22 @@ namespace RecipesRemixed.Recipes.Services.Chefs
                 .All()
                 .AnyAsync(d => d.UserId == userId);
 
-        public async Task<ChefDetailsOutputModel> GetDetails(int id)
-            => await this.mapper
-                .ProjectTo<ChefDetailsOutputModel>(this
-                    .All()
-                    .Where(d => d.Id == id))
-                .FirstOrDefaultAsync();
+        public async Task<ChefOutputModel> GetDetails(int id)
+        {
+            var chef = await this.Data.Set<Chef>().Where(r => r.Id == id).To< ChefOutputModel >().FirstOrDefaultAsync();
+            return chef;
+        }
 
         public async Task<ChefOutputModel> GetDetailsByRecipeId(int recipeId)
-            => await this.mapper
-                .ProjectTo<ChefOutputModel>(this
-                    .All()
-                    .Where(d => d.Recipes.Any(c => c.Id == recipeId)))
-                .SingleOrDefaultAsync();
+        {
+            //=> await this.mapper
+            //    .ProjectTo<ChefOutputModel>(this
+            //        .All()
+            //        .Where(d => d.Recipes.Any(c => c.Id == recipeId)))
+            //    .SingleOrDefaultAsync();
+
+            throw new System.NotImplementedException();
+        }
 
         public Task<int> GetIdByUser(
             string userId)

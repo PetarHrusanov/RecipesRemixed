@@ -1,0 +1,29 @@
+﻿@using RecipesRemixed.Recipes
+@model RecipesRemixed.Recipes.Models.Chefs.ChefOutputModel
+@{
+    this.ViewData["Title"] = Model.Name;
+}
+
+<div class="text-center ">
+    <h1 class="display-3">@this.ViewData["Title"]</h1>
+</div>
+<div class="card-header">
+    <h2>@Html.DisplayNameFor(model => model.Name)</h2>
+    <p>
+        @Model.Name
+    </p>
+    <hr />
+    <h2>
+        @Html.DisplayNameFor(model => model.Qualification)
+    </h2>
+    <p>
+        @Model.Qualification
+    </p>
+    <h2>
+        @Html.DisplayNameFor(model => model.Biography)
+    </h2>
+    <p>
+        @Model.Biography
+    </p>
+</div>
+

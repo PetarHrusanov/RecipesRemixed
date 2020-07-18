@@ -18,7 +18,7 @@
 
         Task<bool> IsChef(string userId);
 
-        Task<ChefDetailsOutputModel> GetDetails(int id);
+        Task<ChefOutputModel> GetDetails(int id);
 
         Task<ChefOutputModel> GetDetailsByRecipeId(int recipeId);
     }

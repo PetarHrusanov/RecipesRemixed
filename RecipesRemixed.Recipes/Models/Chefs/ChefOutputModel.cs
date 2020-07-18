@@ -2,9 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
-    using AutoMapper;
     using RecipesRemixed.Recipes.Data.Models;
     using RecipesRemixed.Recipes.Models.Recipes;
+    using RecipesRemixed.Services.Mapping;
 
     public class ChefOutputModel : IMapFrom<Chef>
     {
@@ -16,17 +16,19 @@
 
         public string Biography { get; set; }
 
-        public IEnumerable<RecipeOutputModel> Recipes { get; set; }
+        // da opraq mapp-vaneto
 
-        public IEnumerable<RecipeOutputModel> RecipesRemix { get; set; }
+        //public IEnumerable<RecipeOutputModel> Recipes { get; set; }
 
-        public virtual void Mapping(Profile mapper)
-            => mapper
-                .CreateMap<Chef, ChefOutputModel>()
-                .ForMember(r => r.Recipes, cfg => cfg
-                    .MapFrom(r => r.Recipes))
-                .ForMember(r => r.RecipesRemix, cfg => cfg
-                    .MapFrom(r => r.RecipesRemix));
+        //public IEnumerable<RecipeOutputModel> RecipesRemix { get; set; }
+
+        //public virtual void Mapping(Profile mapper)
+        //    => mapper
+        //        .CreateMap<Chef, ChefOutputModel>()
+        //        .ForMember(r => r.Recipes, cfg => cfg
+        //            .MapFrom(r => r.Recipes))
+        //        .ForMember(r => r.RecipesRemix, cfg => cfg
+        //            .MapFrom(r => r.RecipesRemix));
 
     }
 }

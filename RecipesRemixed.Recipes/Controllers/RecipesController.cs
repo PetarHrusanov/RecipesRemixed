@@ -32,7 +32,7 @@
 
             var recipeList = new RecipesAllViewModel
             {
-                Recipes = await this.recipes.GetAll()
+                Recipes = await this.recipes.GetAll<RecipeOutputModel>()
             };
 
             return this.View(recipeList);
