@@ -38,6 +38,12 @@
             return this.View(recipeList);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> Create()
+        {
+            return this.View();
+        }
+
 
         [HttpGet]
         public async Task<ActionResult<RecipesSearchOutputModel>> Search(

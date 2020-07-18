@@ -2,7 +2,6 @@
 {
     using System;
     using System.Linq;
-    using AutoMapper;
     using RecipesRemixed.Recipes.Data.Models;
 
     public class ChefDetailsOutputModel :ChefOutputModel
@@ -11,14 +10,14 @@
 
         public int TotalRecipesRemix { get; private set; }
 
-        public void Mapping(Profile mapper)
-            => mapper
-                .CreateMap<Chef, ChefDetailsOutputModel>()
-                .IncludeBase<Chef, ChefDetailsOutputModel>()
-                .ForMember(d => d.TotalRecipes, cfg => cfg
-                    .MapFrom(d => d.Recipes.Count()))
-                .ForMember(d => d.TotalRecipesRemix, cfg => cfg
-                    .MapFrom(d => d.RecipesRemix.Count()));
+        //public void Mapping(Profile mapper)
+        //    => mapper
+        //        .CreateMap<Chef, ChefDetailsOutputModel>()
+        //        .IncludeBase<Chef, ChefDetailsOutputModel>()
+        //        .ForMember(d => d.TotalRecipes, cfg => cfg
+        //            .MapFrom(d => d.Recipes.Count()))
+        //        .ForMember(d => d.TotalRecipesRemix, cfg => cfg
+        //            .MapFrom(d => d.RecipesRemix.Count()));
 
     }
 }
