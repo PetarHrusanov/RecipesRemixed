@@ -24,7 +24,23 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult<ChefDetailsOutputModel>> Details(int id)
+        public async Task<ActionResult> Index(string Id)
+        {
+            var userId = this.currentUser.UserId;
+            var userIsDealer = await this.chefs.IsChef(userId);
+            if (userIsDealer)
+            {
+                var chefId = await this.chefs.GetIdByUser(this.currentUser.UserId);
+                return this.RedirectToAction("Details", new { id = chefId });
+            }
+            else
+            {
+                return this.View();
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Details(int id)
         {
             var chef = await this.chefs.GetDetails(id);
             return this.View(chef);
@@ -49,11 +65,12 @@
         }
 
         [HttpPost]
-        [Authorize]
-        public async Task<ActionResult> Create(ChefInputModel input,string userId)
+        public async Task<ActionResult> Create(ChefInputModel input)
         {
+            var userId = this.currentUser.UserId;
             await this.chefs.CreateChef(input, userId);
-            return Ok();
+            var chefId = await GetChefId();
+            return this.RedirectToAction("Details", chefId);
         }
 
         [HttpPut]

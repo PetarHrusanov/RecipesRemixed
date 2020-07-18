@@ -1,0 +1,30 @@
+﻿@using RecipesRemixed.Recipes.Models.Recipes
+@model RecipesRemixed.Recipes.Models.Chefs.ChefInputModel
+@{
+    this.ViewData["Title"] = "Chefs";
+}
+<div class="text-center">
+    <h1 class="display-3">@this.ViewData["Title"]</h1>
+</div>
+<hr />
+<form asp-action="Create">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Qualification" class="control-label"></label>
+        <input asp-for="Qualification" class="form-control" />
+        <span asp-validation-for="Qualification" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Biography" class="control-label"></label>
+        <input asp-for="Biography" class="form-control" />
+        <span asp-validation-for="Biography" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>
