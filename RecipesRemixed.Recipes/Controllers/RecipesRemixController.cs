@@ -9,13 +9,13 @@
     using RecipesRemixed.Services;
     using RecipesRemixed.Services.Identity;
 
-    public class RecipesRemixController : Controller
+    public class RecipesController : Controller
     {
         private readonly IRecipesService recipes;
         private readonly IChefsService chefs;
         private readonly ICurrentUserService currentUser;
 
-        public RecipesRemixController(
+        public RecipesController(
             IRecipesService recipes,
             IChefsService chefs,
             ICurrentUserService currentUser)
@@ -37,7 +37,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Create(int id)
+        public async Task<ActionResult> Create()
         {
             return this.View();
         }

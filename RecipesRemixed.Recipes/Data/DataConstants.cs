@@ -24,7 +24,7 @@
         {
             public const int MinCalLength = 1;
             public const int MaxCalLength = 4;
-            public const string CaloriesRegEx = @"\+[0-9]*";
+            //public const string CaloriesRegEx = @"\+[0-9]*";
         }
     }
 }

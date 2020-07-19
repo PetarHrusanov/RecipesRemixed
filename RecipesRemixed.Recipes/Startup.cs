@@ -71,6 +71,13 @@ namespace RecipesRemixed.Recipes
                 //.UseAuthorization()
                 .UseEndpoints(endpoints => endpoints
                     .MapDefaultControllerRoute());
+
+            app.UseEndpoints(
+                endpoints =>
+                {
+                    endpoints.MapControllerRoute("recipesDetails", "Recipes/{name:minlength(3)}", new { controller = "Recipes", action = "Details" });
+                    endpoints.MapRazorPages();
+                });
         }
 
 

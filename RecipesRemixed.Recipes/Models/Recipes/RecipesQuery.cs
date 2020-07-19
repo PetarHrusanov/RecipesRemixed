@@ -25,7 +25,7 @@
         [Required]
         [MinLength(MinCalLength)]
         [MaxLength(MaxCalLength)]
-        [RegularExpression(CaloriesRegEx)]
+        //[RegularExpression(CaloriesRegEx)]
         public int? Calories { get; set; }
 
         [Required]

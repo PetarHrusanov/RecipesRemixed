@@ -1,4 +1,4 @@
-﻿namespace RecipesRemixed.Recipes.Models.Recipes
+﻿namespace RecipesRemixed.Recipes.Models.RecipesRemix
 {
     using System;
     using System.ComponentModel.DataAnnotations;
@@ -8,7 +8,7 @@
     using static Data.DataConstants.Url;
     using static Data.DataConstants.Calories;
 
-    public class RecipesInputModel
+    public class RecipesRemixInputModel
     {
         [Required]
         [MinLength(MinNameLength)]

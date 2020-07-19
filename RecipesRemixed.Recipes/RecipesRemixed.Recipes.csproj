@@ -17,6 +17,7 @@
     <Folder Include="Services\Identity\" />
     <Folder Include="Views\Identity\" />
     <Folder Include="Views\Chefs\" />
+    <Folder Include="Models\RecipesRemix\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.5" />
