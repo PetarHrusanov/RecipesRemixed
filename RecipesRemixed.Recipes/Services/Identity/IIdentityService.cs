@@ -11,6 +11,6 @@ namespace RecipesRemixed.Recipes.Services.Identity
         Task<UserOutputModel> Login([Body] UserInputModel loginInput);
 
         [Post("/Identity/Register")]
-        Task<UserOutputModel> Register([Body] UserInputModel loginInput);
+        Task<UserInputModel> Register([Body] UserInputModel loginInput);
     }
 }

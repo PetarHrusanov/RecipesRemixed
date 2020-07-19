@@ -1,4 +1,4 @@
-﻿namespace RecipesRemixed.Recipes.Services.Recipes
+﻿namespace RecipesRemixed.Recipes.Services.RecipesRemix
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -9,22 +9,22 @@
     using Microsoft.EntityFrameworkCore;
     using RecipesRemixed.Recipes.Models.Recipes;
     using RecipesRemixed.Services;
-    using RecipesRemixed.Recipes.Services.Recipes;
+    using RecipesRemixed.Recipes.Models.RecipesRemix;
 
-    public class RecipesService : DataService<Recipe>, IRecipesService
+    public class RecipesRemixService : DataService<RecipeRemix>, IRecipesRemixService
     {
 
         private const int RecipesPerPage = 10;
 
-        public RecipesService(RecipesDbContext db)
+        public RecipesRemixService(RecipesDbContext db)
         : base(db)
         {
 
         }
 
-        public async Task<RecipeOutputModel> Create(RecipesInputModel recipeInput, int chefId)
+        public async Task<RecipeRemixOutputModel> Create(RecipesRemixInputModel recipeInput, int chefId)
         {
-            var recipe = new Recipe
+            var recipe = new RecipeRemix
             {
                 Name = recipeInput.Name,
                 Ingredients = recipeInput.Ingredients,
@@ -39,40 +39,40 @@
             };
 
             await this.Save(recipe);
-            var output = await this.Data.Set<Recipe>().Where(r => r.Id == recipe.Id).To<RecipeOutputModel>().FirstOrDefaultAsync();
+            var output = await this.Data.Set<RecipeRemix>().Where(r => r.Id == recipe.Id).To<RecipeRemixOutputModel>().FirstOrDefaultAsync();
 
             return output;
         }
 
         public async Task<bool> Delete(int id)
         {
-            var carAd = await this.Data.Set<Recipe>().FindAsync(id);
+            var carAd = await this.Data.Set<RecipeRemix>().FindAsync(id);
 
             if (carAd == null)
             {
                 return false;
             }
 
-            this.Data.Set<Recipe>().Remove(carAd);
+            this.Data.Set<RecipeRemix>().Remove(carAd);
 
             await this.Data.SaveChangesAsync();
 
             return true;
         }
 
-        public async Task<Recipe> Find(int id)
+        public async Task<RecipeRemix> Find(int id)
             => await this
                 .All()
                 .FirstOrDefaultAsync(c => c.Id == id);
 
-        public async Task<RecipeOutputModel> GetDetails(int id)
+        public async Task<RecipeRemixOutputModel> GetDetails(int id)
         {
-            var recipe = await this.All().Where(r => r.Id == id).To<RecipeOutputModel>().FirstOrDefaultAsync();
+            var recipe = await this.All().Where(r => r.Id == id).To<RecipeRemixOutputModel>().FirstOrDefaultAsync();
             return recipe;
 
         }
 
-        public async Task<IEnumerable<RecipeOutputModel>> GetListings(RecipesQuery query)
+        public async Task<IEnumerable<RecipeRemixOutputModel>> GetListings(RecipesQuery query)
         {
             //=> (await this.mapper
             //    .ProjectTo<RecipeOutputModel>(this
@@ -94,7 +94,7 @@
             return list;
         }
 
-        public async Task<IEnumerable<MyRecipeOutputModel>> Mine(int chefId, RecipesQuery query)
+        public async Task<IEnumerable<RecipeRemixOutputModel>> Mine(int chefId, RecipesQuery query)
         {
             //=> (await this.mapper
             //       .ProjectTo<MyRecipeOutputModel>(this
@@ -103,14 +103,14 @@
             //       .Skip((query.Page - 1) * RecipesPerPage)
             //       .Take(RecipesPerPage);
 
-            var recipes = await this.GetRecipeQuery(query, chefId).To<RecipeOutputModel>().ToListAsync();
+            var recipes = await this.GetRecipeQuery(query, chefId).To<RecipeRemixOutputModel>().ToListAsync();
 
-            return (IEnumerable<MyRecipeOutputModel>)recipes;
+            return (IEnumerable<RecipeRemixOutputModel>)recipes;
 
         }
 
         // da vidq modify kak se pravi v controller-a i da go izkaram 
-        public Task<bool> Modify(RecipesInputModel recipeInput)
+        public Task<bool> Modify(RecipesRemixInputModel recipeInput)
         {
             throw new System.NotImplementedException();
         }
@@ -120,7 +120,7 @@
                     .GetRecipeQuery(query)
                     .CountAsync();
 
-        private IQueryable<Recipe> GetRecipeQuery(
+        private IQueryable<RecipeRemix> GetRecipeQuery(
             RecipesQuery query, int? chefId = null)
         {
             var dataQuery = this.All();

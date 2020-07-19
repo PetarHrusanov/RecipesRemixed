@@ -40,7 +40,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Recipes" asp-action="Index">Recipes</a>
                         </li>
-                        @if (this.User == null)
+                        @if (!this.User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Identity" asp-action="Login">Login</a>
@@ -49,7 +49,7 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Identity" asp-action="Register">Register</a>
                             </li>
                         }
-                        @if (this.User != null)
+                        @if (this.User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="Identity" asp-controller="Chefs" asp-action="Index">Chef</a>
@@ -100,3 +100,6 @@
     @this.RenderSection("Scripts", required: false)
 </body>
 </html>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

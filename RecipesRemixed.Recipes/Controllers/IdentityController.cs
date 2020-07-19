@@ -2,7 +2,6 @@
 {
     using System;
     using System.Threading.Tasks;
-    using AutoMapper;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using RecipesRemixed.Recipes.Models.Identity;
@@ -13,14 +12,13 @@
     {
 
         private readonly IIdentityService identityService;
-        private readonly IMapper mapper;
+        //private readonly IMapper mapper;
 
-        public IdentityController(
-                    IIdentityService identityService,
-                    IMapper mapper)
-        {
+        public IdentityController(IIdentityService identityService)
+        { 
+
             this.identityService = identityService;
-            this.mapper = mapper;
+            //this.mapper = mapper;
         }
 
         [HttpGet]
@@ -29,24 +27,39 @@
 
         [HttpPost]
         public async Task<IActionResult> Login(UserInputModel model)
-        => await this.Handle(
-                async () =>
-                {
-                    var result = await this.identityService
+        {
+            var result = await this.identityService
                         .Login(model);
 
-                    this.Response.Cookies.Append(
-                        AuthenticationCookieName,
-                        result.Token,
-                        new CookieOptions
-                        {
-                            HttpOnly = true,
-                            Secure = true,
-                            MaxAge = TimeSpan.FromDays(1)
-                        });
-                },
-                success: RedirectToAction("Index"),
-                failure: View("../Home/Index", model));
+            this.Response.Cookies.Append(
+                AuthenticationCookieName,
+                result.Token,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    MaxAge = TimeSpan.FromDays(1)
+                });
+            return this.View();
+        }
+        //=> await this.Handle(
+        //        async () =>
+        //        {
+        //            var result = await this.identityService
+        //                .Login(model);
+
+        //            this.Response.Cookies.Append(
+        //                AuthenticationCookieName,
+        //                result.Token,
+        //                new CookieOptions
+        //                {
+        //                    HttpOnly = true,
+        //                    Secure = true,
+        //                    MaxAge = TimeSpan.FromDays(1)
+        //                });
+        //        },
+        //        success: RedirectToAction("Index"),
+        //        failure: View("../Home/Index", model));
 
         [HttpGet]
         public async Task<IActionResult> Register()
@@ -57,9 +70,9 @@
         [HttpPost]
         public async Task<IActionResult> Register(UserInputModel user)
         {
-            await this.identityService.Register(user);
+            var input = await this.identityService.Register(user);
 
-            return this.RedirectToAction("Index");
+            return await this.Login(input);
 
         }
     }

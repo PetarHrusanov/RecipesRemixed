@@ -68,7 +68,7 @@ namespace RecipesRemixed.Recipes
                 .UseStaticFiles()
                 .UseRouting()
                 //.UseJwtCookieAuthentication()
-                //.UseAuthorization()
+                .UseAuthorization()
                 .UseEndpoints(endpoints => endpoints
                     .MapDefaultControllerRoute());
 

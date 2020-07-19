@@ -23,7 +23,7 @@
 
         [HttpPost]
         [Route(nameof(Register))]
-        public async Task<ActionResult<UserOutputModel>> Register(UserInputModel input)
+        public async Task<ActionResult<UserInputModel>> Register(UserInputModel input)
         {
             var result = await this.identity.Register(input);
 
@@ -32,10 +32,11 @@
                 return BadRequest(result.Errors);
             }
 
-            return await Login(input);
+            return input;
         }
 
         [HttpPost]
+        [Route(nameof(Login))]
         public async Task<ActionResult<UserOutputModel>> Login(UserInputModel input)
         {
             var result = await this.identity.Login(input);
