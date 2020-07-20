@@ -40,7 +40,7 @@
                     Secure = true,
                     MaxAge = TimeSpan.FromDays(1)
                 });
-            return this.View();
+            return this.RedirectToAction("Index", "Chefs");
         }
         //=> await this.Handle(
         //        async () =>

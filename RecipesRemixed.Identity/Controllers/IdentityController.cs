@@ -46,7 +46,9 @@
                 return BadRequest(result.Errors);
             }
 
-            return new UserOutputModel(result.Data.Token);
+            var newUser = new UserOutputModel(result.Data.Token);
+
+            return newUser;
         }
 
         [HttpPut]

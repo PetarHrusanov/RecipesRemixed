@@ -57,7 +57,9 @@
 
             var token = this.jwtTokenGenerator.GenerateToken(user, roles);
 
-            return new UserOutputModel(token);
+            var newUser = new UserOutputModel(token);
+
+            return newUser;
         }
 
         public async Task<Result> ChangePassword(
