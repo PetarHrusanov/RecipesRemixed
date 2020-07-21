@@ -20,7 +20,8 @@ namespace RecipesRemixed.Identity
             => services
                 .AddWebService<IdentityDbContext>(this.Configuration)
                 .AddUserStorage()
-                //.AddTransient<IDataSeeder, IdentityDataSeeder>()
+                .AddTransient<IDataSeeder, IdentityDataSeeder>()
+                //.AddAuthentication(configuration)
                 .AddTransient<IIdentityService, IdentityService>()
                 .AddTransient<ITokenGeneratorService, TokenGeneratorService>();
 

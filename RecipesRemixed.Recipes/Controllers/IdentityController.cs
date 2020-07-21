@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using RecipesRemixed.Recipes.Controller;
     using RecipesRemixed.Recipes.Models.Identity;
     using RecipesRemixed.Recipes.Services.Identity;
     using static RecipesRemixed.Infrastructure.InfrastructureConstants;
@@ -31,35 +32,19 @@
             var result = await this.identityService
                         .Login(model);
 
-            this.Response.Cookies.Append(
+            this.Response
+                .Cookies.Append(
                 AuthenticationCookieName,
                 result.Token,
                 new CookieOptions
                 {
                     HttpOnly = true,
-                    Secure = true,
+                    //Secure = true,
                     MaxAge = TimeSpan.FromDays(1)
                 });
-            return this.RedirectToAction("Index", "Chefs");
-        }
-        //=> await this.Handle(
-        //        async () =>
-        //        {
-        //            var result = await this.identityService
-        //                .Login(model);
 
-        //            this.Response.Cookies.Append(
-        //                AuthenticationCookieName,
-        //                result.Token,
-        //                new CookieOptions
-        //                {
-        //                    HttpOnly = true,
-        //                    Secure = true,
-        //                    MaxAge = TimeSpan.FromDays(1)
-        //                });
-        //        },
-        //        success: RedirectToAction("Index"),
-        //        failure: View("../Home/Index", model));
+            return RedirectToAction(nameof(ChefsController.Index), "Chefs");
+        }
 
         [HttpGet]
         public async Task<IActionResult> Register()
