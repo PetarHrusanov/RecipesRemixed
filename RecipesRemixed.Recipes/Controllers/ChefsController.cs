@@ -24,21 +24,23 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Index(string Id)
+        public async Task<ActionResult<ChefsAllViewModel>> Index(string Id)
         {
-            var userId = this.currentUser.UserId;
-            var userIsDealer = await this.chefs.IsChef(userId);
-            //if (userIsDealer)
-            //{
-            //    var chefId = await this.chefs.GetIdByUser(this.currentUser.UserId);
-            //    return this.RedirectToAction("Details", new { id = chefId });
-            //}
-            //else
-            //{
-            //    return this.View();
-            //}
 
-            return this.View();
+            var chefs = new ChefsAllViewModel
+            {
+                Chefs = await this.chefs.GetAll()
+            };
+
+            return this.View(chefs);
+        }
+
+        [HttpGet]
+        [Route("Chefs/{id:int}")]
+        public async Task<ActionResult<ChefOutputModel>> BasicDetails(int id)
+        {
+            var chef = await this.chefs.GetDetails(id);
+            return this.View(chef);
         }
 
         [HttpGet]
@@ -85,14 +87,28 @@
             return this.RedirectToAction("Details", chefId);
         }
 
-        [HttpPut]
-        public async Task<ActionResult> Edit(int id, ChefInputModel input)
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult> Edit()
+        {
+            var chef = await this.chefs.FindByUser(this.currentUser.UserId);
+            var chenInput = new ChefInputModel
+            {
+                Name = chef.Name,
+                Qualification = chef.Qualification,
+                Biography = chef.Biography
+            };
+            return this.View(chenInput);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Edit(ChefInputModel input)
         {
             var chef = await this.chefs.FindByUser(this.currentUser.UserId);
 
-            if (id != chef.Id)
+            if (chef == null)
             {
-                return BadRequest(Result.Failure("You cannot edit this dealer."));
+                return BadRequest(Result.Failure("You cannot edit this chef."));
             }
 
             // eventualno da iznesa tazi logika v service
@@ -102,7 +118,7 @@
 
             await this.chefs.Save(chef);
 
-            return Ok();
+            return RedirectToAction("Details", new { id = chef.Id});
         }
     }
 }

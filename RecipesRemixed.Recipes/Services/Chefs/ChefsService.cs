@@ -2,6 +2,7 @@
 namespace RecipesRemixed.Recipes.Services.Chefs
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
@@ -62,6 +63,12 @@ namespace RecipesRemixed.Recipes.Services.Chefs
             //    .SingleOrDefaultAsync();
 
             throw new System.NotImplementedException();
+        }
+
+        public async Task<IEnumerable<ChefOutputModel>> GetAll()
+        {
+            var list = await Data.Set<Chef>().To<ChefOutputModel>().ToListAsync();
+            return list;
         }
 
         public Task<int> GetIdByUser(

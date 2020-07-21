@@ -9,13 +9,13 @@
     using RecipesRemixed.Services;
     using RecipesRemixed.Services.Identity;
 
-    public class RecipesController : Controller
+    public class RecipesRemixController : Controller
     {
         private readonly IRecipesService recipes;
         private readonly IChefsService chefs;
         private readonly ICurrentUserService currentUser;
 
-        public RecipesController(
+        public RecipesRemixController(
             IRecipesService recipes,
             IChefsService chefs,
             ICurrentUserService currentUser)
@@ -64,7 +64,7 @@
         }
 
         [HttpGet]
-        [Route("Recipes/{id:int}")]
+        [Route("RecipesRemix/{id:int}")]
         public async Task<ActionResult<RecipeOutputModel>> Details(int id)
         { 
             var recipe = await this.recipes.GetDetails(id);

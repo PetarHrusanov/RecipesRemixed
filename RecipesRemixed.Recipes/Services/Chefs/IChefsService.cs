@@ -1,6 +1,7 @@
 ﻿namespace RecipesRemixed.Recipes.Services.Chefs
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using RecipesRemixed.Recipes.Data.Models;
     using RecipesRemixed.Recipes.Models.Chefs;
@@ -19,6 +20,8 @@
         Task<bool> IsChef(string userId);
 
         Task<ChefOutputModel> GetDetails(int id);
+
+        Task<IEnumerable<ChefOutputModel>> GetAll();
 
         Task<ChefOutputModel> GetDetailsByRecipeId(int recipeId);
     }
