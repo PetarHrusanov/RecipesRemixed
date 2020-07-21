@@ -5,7 +5,6 @@ namespace RecipesRemixed.Recipes.Services.Chefs
     using System.Linq;
     using System.Linq.Expressions;
     using System.Threading.Tasks;
-    using AutoMapper;
     using Data;
     using Data.Models;
     using Microsoft.EntityFrameworkCore;

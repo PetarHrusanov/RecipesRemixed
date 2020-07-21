@@ -2,8 +2,10 @@
 {
     using System;
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
+    using RecipesRemixed.Infrastructure;
     using RecipesRemixed.Recipes.Controller;
     using RecipesRemixed.Recipes.Models.Identity;
     using RecipesRemixed.Recipes.Services.Identity;
@@ -60,5 +62,14 @@
             return await this.Login(input);
 
         }
+
+        [AllowAnonymous]
+        public IActionResult Logout()
+        {
+            this.Response.Cookies.Delete(InfrastructureConstants.AuthenticationCookieName);
+
+            return RedirectToAction(nameof(HomeController.Index), "Home");
+        }
+
     }
 }

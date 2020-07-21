@@ -1,116 +1,118 @@
 namespace RecipesRemixed.Recipes
 {
-    using System.Reflection;
-    using System.Text;
-    using Infrastructure;
-    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using RecipesRemixed.Recipes.Data;
+    using RecipesRemixed.Recipes.Infrastructure;
+    using RecipesRemixed.Recipes.Infrastructure.Extensions;
+    using RecipesRemixed.Recipes.Services;
+    using RecipesRemixed.Recipes.Services.Recipes;
+    using RecipesRemixed.Recipes.Services.Chefs;
+    using RecipesRemixed.Recipes.Services.RecipesRemix;
+    using RecipesRemixed.Recipes.Services.Identity;
+    using RecipesRemixed.Infrastructure;
+    using RecipesRemixed.Services.Identity;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.IdentityModel.Tokens;
-    using RecipesRemixed.Infrastructure;
-    using RecipesRemixed.Recipes.Data;
-    using RecipesRemixed.Recipes.Data.Models;
-    using RecipesRemixed.Recipes.Services;
-    using RecipesRemixed.Recipes.Services.Chefs;
-    using RecipesRemixed.Recipes.Services.Identity;
-    using RecipesRemixed.Recipes.Services.Recipes;
-    using RecipesRemixed.Services.Identity;
-    using RecipesRemixed.Services.Mapping;
+    using Microsoft.Extensions.Hosting;
     using Refit;
+    using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+    using RecipesRemixed.Services.Mapping;
+    using RecipesRemixed.Recipes.Data.Models;
+    using System.Reflection;
 
     public class Startup
     {
-        public Startup(IConfiguration configuration) 
-            => this.Configuration = configuration;
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
 
         public IConfiguration Configuration { get; }
 
+        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             var serviceEndpoints = this.Configuration
-                .GetSection(nameof(ServiceEndpoints))
-                .Get<ServiceEndpoints>(config => config.BindNonPublicProperties = true);
-
-            services.AddDbContext<RecipesDbContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+               .GetSection(nameof(ServiceEndpoints))
+               .Get<ServiceEndpoints>(config => config.BindNonPublicProperties = true);
 
             services
                 .AddWebService<RecipesDbContext>(this.Configuration)
-                //.AddTransient<IDataSeeder, DealersDataSeeder>()
-                .AddTransient<IRecipesService, RecipesService>()
+                .AddScoped<ICurrentTokenService, CurrentTokenService>()
+                .AddTransient<JwtCookieAuthenticationMiddleware>()
                 .AddTransient<IChefsService, ChefsService>()
-                //.AddTokenAuthentication(this.Configuration)
-                //.AddScoped<ICurrentTokenService, CurrentTokenService>()
-                //.AddTransient<JwtCookieAuthenticationMiddleware>()
+                .AddTransient<IRecipesService, RecipesService>()
+                .AddTransient<IRecipesRemixService, RecipesRemixService>()
+                .AddMessaging()
                 .AddControllersWithViews(options => options
                     .Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
 
-            var secret = Configuration
-                .GetSection(nameof(ApplicationSettings))
-                .GetValue<string>(nameof(ApplicationSettings.Secret));
-  
+
+            services.AddRazorPages();
+            services.AddRouting(options => options.LowercaseUrls = true);
+
             services
                 .AddRefitClient<IIdentityService>()
                 .WithConfiguration(serviceEndpoints.Identity);
 
-            services.AddHttpContextAccessor();
+            //services
+            //    .AddRefitClient<IStatisticsService>()
+            //    .WithConfiguration(serviceEndpoints.Statistics);
 
-            services.AddRazorPages();
+            //services
+            //    .AddRefitClient<IReviewService>()
+            //    .WithConfiguration(serviceEndpoints.Reviews);
+
+            //services
+            //     .AddRefitClient<IReviewsGatewayService>()
+            //     .WithConfiguration(serviceEndpoints.ReviewsGateway);
         }
 
-
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
             AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
+            // Database Migrations
+            app.UseDatabaseMigration();
 
-            //using (var serviceScope = app.ApplicationServices.CreateScope())
-            //{
-            //    var dbContext = serviceScope.ServiceProvider.GetRequiredService<RecipesDbContext>();
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                //app.UseDatabaseErrorPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
+            //app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
-            //    dbContext.Database.Migrate();
+            app.UseRouting();
+            app.UseCors(options => options
+                    .AllowAnyOrigin()
+                    .AllowAnyHeader()
+                    .AllowAnyMethod());
 
-            //    //if (env.IsDevelopment())
-            //    //{
-            //    //    dbContext.Database.Migrate();
-            //    //}
+            app.UseMiddleware<JwtCookieAuthenticationMiddleware>();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
-            //    //new ApplicationDbContextSeeder().SeedAsync(dbContext, serviceScope.ServiceProvider).GetAwaiter().GetResult();
-            //}
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
 
-            //app
-            //      .UseWebService(env)
-            //      .Initialize();
-
-            app
-                .UseStaticFiles()
-                .UseRouting()
-                .UseAuthentication()
-                //.UseJwtCookieAuthentication()
-                //.UseAuthentication()
-                //.UseAuthorization()
-                .UseEndpoints(endpoints => endpoints
-                    .MapDefaultControllerRoute());
-
-            //app
-            //    .UseMiddleware<JwtCookieAuthenticationMiddleware>()
-            //    .UseAuthentication();
-
-            //app.UseCors(x => x
-            //    .AllowAnyOrigin()
-            //    .AllowAnyMethod()
-            //    .AllowAnyHeader()
-
-            app.UseEndpoints(
-                endpoints =>
-                {
-                    endpoints.MapControllerRoute("recipesDetails", "Recipes/{name:minlength(3)}", new { controller = "Recipes", action = "Details" });
-                    endpoints.MapRazorPages();
-                });
+                //endpoints.MapHealthChecks("/health", new HealthCheckOptions
+                //{
+                //    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                //});
+            });
         }
     }
 }

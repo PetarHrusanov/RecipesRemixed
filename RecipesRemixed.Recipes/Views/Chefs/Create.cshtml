@@ -28,12 +28,6 @@
         <input type="submit" value="Create" class="btn btn-primary" />
     </div>
 </form>
-@if (this.User.Identity.IsAuthenticated)
-{
-    <div class="text-center">
-        <a asp-controller="Chefs" asp-action="Details" class="btn btn-primary btn-lg">Details</a>
-    </div>
-}
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

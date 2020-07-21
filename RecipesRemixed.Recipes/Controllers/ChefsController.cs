@@ -28,21 +28,25 @@
         {
             var userId = this.currentUser.UserId;
             var userIsDealer = await this.chefs.IsChef(userId);
-            if (userIsDealer)
-            {
-                var chefId = await this.chefs.GetIdByUser(this.currentUser.UserId);
-                return this.RedirectToAction("Details", new { id = chefId });
-            }
-            else
-            {
-                return this.View();
-            }
+            //if (userIsDealer)
+            //{
+            //    var chefId = await this.chefs.GetIdByUser(this.currentUser.UserId);
+            //    return this.RedirectToAction("Details", new { id = chefId });
+            //}
+            //else
+            //{
+            //    return this.View();
+            //}
+
+            return this.View();
         }
 
         [HttpGet]
         public async Task<ActionResult> Details(int id)
         {
-            var chef = await this.chefs.GetDetails(id);
+            var userId = this.currentUser.UserId;
+            var chefId = await this.chefs.GetIdByUser(userId);
+            var chef = await this.chefs.GetDetails(chefId);
             return this.View(chef);
         }
             
@@ -64,7 +68,15 @@
             return await this.chefs.GetIdByUser(this.currentUser.UserId);
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult> Create()
+        {
+            return this.View();
+        }
+
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult> Create(ChefInputModel input)
         {
             var userId = this.currentUser.UserId;

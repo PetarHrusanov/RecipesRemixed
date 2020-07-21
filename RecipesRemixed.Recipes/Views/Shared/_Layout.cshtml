@@ -35,11 +35,11 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Recipes" asp-action="Index">Recipes</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Identity" asp-action="Login">Login</a>
-                        </li>
                         @if (!this.User.Identity.IsAuthenticated)
                         {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Identity" asp-action="Login">Login</a>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Identity" asp-action="Register">Register</a>
                             </li>
@@ -50,10 +50,10 @@
                                 <a class="nav-link text-dark" asp-area="Identity" asp-controller="Chefs" asp-action="Index">Chef</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"> МММММ @(this.User.Identity.Name)!</a>
+                                <a class="nav-link text-dark" asp-area="Identity" asp-controller="Identity" asp-action="Details"> МММММ @(this.User.Identity.Name)!</a>
                             </li>
                             <li class="nav-item">
-                                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@(this.Url.Action("Index", "Home", new { area = string.Empty }))">
+                                <form class="form-inline" asp-area="Identity" asp-controller="Identity" asp-action="Logout">
                                     <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
                                 </form>
                             </li>
