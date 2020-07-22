@@ -47,5 +47,11 @@
         [MinLength(MinDescriptionLength)]
         [MaxLength(MaxDescriptionLength)]
         public string Allergies { get; set; }
+
+        [Required]
+        public int RecipeId { get; set; }
+
+        //[Required]
+        public int ChefId { get; set; }
     }
 }

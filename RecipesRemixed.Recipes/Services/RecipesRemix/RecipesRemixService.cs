@@ -36,6 +36,7 @@
                 ChefId = chefId,
                 ImageUrl = recipeInput.ImageUrl,
                 TypeOfDish = recipeInput.TypeOfDish,
+                RecipeId = recipeInput.RecipeId
             };
 
             await this.Save(recipe);
@@ -86,11 +87,7 @@
 
         public async Task<IEnumerable<T>> GetAll<T>()
         {
-            var list = await Data.Set<Recipe>().To<T>().ToListAsync();
-            //List<RecipeOutputModel> result = this.mapper.Map<List<Recipe>, List<RecipeOutputModel>>(list);
-            //var result = this.mapper
-            //        .ProjectTo<RecipeOutputModel>(this.Data.Set<Recipe>());
-
+            var list = await Data.Set<RecipeRemix>().To<T>().ToListAsync();
             return list;
         }
 

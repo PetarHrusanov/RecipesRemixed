@@ -133,29 +133,5 @@
 
             return new MyRecipesOutputModel(recipesListings, query.Page, totalPages);
         }
-
-
-        //[HttpPut]
-        //[Authorize]
-        //[Route(Id + PathSeparator + nameof(ChangeAvailability))]
-        //public async Task<ActionResult> ChangeAvailability(int id)
-        //{
-        //    var dealerId = await this.dealers.GetIdByUser(this.currentUser.UserId);
-
-        //    var dealerHasCar = await this.dealers.HasCarAd(dealerId, id);
-
-        //    if (!dealerHasCar)
-        //    {
-        //        return BadRequest(Result.Failure("You cannot edit this car ad."));
-        //    }
-
-        //    var carAd = await this.carAds.Find(id);
-
-        //    carAd.IsAvailable = !carAd.IsAvailable;
-
-        //    await this.carAds.Save(carAd);
-
-        //    return Result.Success;
-        //}
     }
 }

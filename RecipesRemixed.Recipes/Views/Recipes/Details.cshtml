@@ -55,9 +55,9 @@
 <div>
     <p>Made By @Model.ChefName</p>
 </div>
-@if(this.User != null)
+@if (this.User.Identity.IsAuthenticated)
 {
-    <div>
-        <a asp-contoller ="RecipesRemix" asp-action="Create" asp-route-id="@Model.Id">Remix</a>
-    </div>
+<div class="text-center">
+    @Html.ActionLink("ReMix", "Create", "RecipesRemix", new { id = 2 }, new { @class = "btn btn-primary btn-lg" })
+</div>
 }

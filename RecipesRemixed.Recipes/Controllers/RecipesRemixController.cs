@@ -4,51 +4,71 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using RecipesRemixed.Recipes.Models.Recipes;
+    using RecipesRemixed.Recipes.Models.RecipesRemix;
     using RecipesRemixed.Recipes.Services.Chefs;
     using RecipesRemixed.Recipes.Services.Recipes;
+    using RecipesRemixed.Recipes.Services.RecipesRemix;
     using RecipesRemixed.Services;
     using RecipesRemixed.Services.Identity;
 
     public class RecipesRemixController : Controller
     {
-        private readonly IRecipesService recipes;
+        private readonly IRecipesRemixService recipesRemix;
         private readonly IChefsService chefs;
         private readonly ICurrentUserService currentUser;
+        private readonly IRecipesService basicRecipes;
 
         public RecipesRemixController(
-            IRecipesService recipes,
+            IRecipesRemixService recipesRemix,
             IChefsService chefs,
-            ICurrentUserService currentUser)
+            ICurrentUserService currentUser,
+            IRecipesService basicRecipes)
         {
-            this.recipes = recipes;
+            this.recipesRemix = recipesRemix;
             this.chefs = chefs;
             this.currentUser = currentUser;
+            this.basicRecipes = basicRecipes;
         }
 
         public async Task<IActionResult> Index()
         {
 
-            var recipeList = new RecipesAllViewModel
+            var recipeList = new RecipesRemixAllViewModel
             {
-                Recipes = await this.recipes.GetAll<RecipeOutputModel>()
+                Recipes = await this.recipesRemix.GetAll<RecipeRemixOutputModel>()
             };
 
             return this.View(recipeList);
         }
 
         [HttpGet]
-        public async Task<ActionResult> Create()
+        public async Task<ActionResult> Create(int id)
         {
-            return this.View();
+            var chef = await this.chefs.GetIdByUser(currentUser.UserId);
+            var recipe =  await this.basicRecipes.Find(id);
+            var recipeRemix = new RecipesRemixInputModel
+            {
+                Name = recipe.Name,
+                Allergies = recipe.Allergies,
+                Instructions = recipe.Instructions,
+                Calories = recipe.Calories,
+                TypeOfDish = recipe.TypeOfDish,
+                Ingredients = recipe.Ingredients,
+                Vegan = recipe.Vegan,
+                Vegetarian = recipe.Vegetarian,
+                ImageUrl = recipe.ImageUrl,
+                RecipeId = recipe.Id,
+                ChefId = chef
+            };
+            return this.View(recipeRemix);
         }
 
         [HttpPost]
-        public async Task<ActionResult<RecipeOutputModel>> Create(RecipesInputModel input)
+        public async Task<ActionResult<RecipeOutputModel>> Create(RecipesRemixInputModel input)
         {
             var chef = await this.chefs.FindByUser(this.currentUser.UserId);
-            await this.recipes.Create(input, chef.Id);
+            await this.recipesRemix.Create(input, chef.Id);
             return this.RedirectToAction("Index");
-
         }
 
 
@@ -56,18 +76,19 @@
         public async Task<ActionResult<RecipesSearchOutputModel>> Search(
             [FromQuery] RecipesQuery query)
         {
-            var carAdListings = await this.recipes.GetListings(query);
+            //var carAdListings = await this.recipesRemix.GetListings(query);
 
-            var totalPages = await this.recipes.Total(query);
+            //var totalPages = await this.recipesRemix.Total(query);
 
-            return new RecipesSearchOutputModel(carAdListings, query.Page, totalPages);
+            //return new RecipesSearchOutputModel();
+            return this.RedirectToAction("Index");
         }
 
         [HttpGet]
         [Route("RecipesRemix/{id:int}")]
         public async Task<ActionResult<RecipeOutputModel>> Details(int id)
         { 
-            var recipe = await this.recipes.GetDetails(id);
+            var recipe = await this.recipesRemix.GetDetails(id);
             return this.View(recipe);
         }
 
@@ -86,7 +107,7 @@
                 return BadRequest(Result.Failure("You cannot edit this car ad."));
             }
 
-            var recipe = await this.recipes.Find(id);
+            var recipe = await this.recipesRemix.Find(id);
 
             recipe.Name = input.Name;
             recipe.Ingredients = input.Ingredients;
@@ -97,7 +118,7 @@
             recipe.Vegan = input.Vegan;
             recipe.Allergies = input.Allergies;
 
-            await this.recipes.Save(recipe);
+            await this.recipesRemix.Save(recipe);
 
             return Result.Success;
         }
@@ -116,7 +137,7 @@
                 return BadRequest(Result.Failure("You cannot edit this car ad."));
             }
 
-            return await this.recipes.Delete(id);
+            return await this.recipesRemix.Delete(id);
         }
 
         [HttpGet]
@@ -127,11 +148,13 @@
         {
             var chefId = await this.chefs.GetIdByUser(this.currentUser.UserId);
 
-            var recipesListings = await this.recipes.Mine(chefId, query);
+            var recipesListings = await this.recipesRemix.Mine(chefId, query);
 
-            var totalPages = await this.recipes.Total(query);
+            var totalPages = await this.recipesRemix.Total(query);
 
-            return new MyRecipesOutputModel(recipesListings, query.Page, totalPages);
+            //return new MyRecipesOutputModel(recipesListings, query.Page, totalPages);
+
+            return this.RedirectToAction("Index");
         }
 
 
