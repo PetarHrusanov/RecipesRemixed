@@ -4,10 +4,16 @@
     using System.Collections.Generic;
     using RecipesRemixed.Recipes.Data.Models;
     using RecipesRemixed.Recipes.Models.Recipes;
+    using RecipesRemixed.Recipes.Models.RecipesRemix;
     using RecipesRemixed.Services.Mapping;
 
     public class ChefOutputModel : IMapFrom<Chef>
     {
+        public ChefOutputModel()
+        {
+            this.Recipes = new HashSet<RecipeOutputModel>();
+            this.RecipesRemix = new HashSet<RecipeRemixOutputModel>();
+        }
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -16,19 +22,9 @@
 
         public string Biography { get; set; }
 
-        // da opraq mapp-vaneto
+        public ICollection<RecipeOutputModel> Recipes { get; set; }
 
-        //public IEnumerable<RecipeOutputModel> Recipes { get; set; }
-
-        //public IEnumerable<RecipeOutputModel> RecipesRemix { get; set; }
-
-        //public virtual void Mapping(Profile mapper)
-        //    => mapper
-        //        .CreateMap<Chef, ChefOutputModel>()
-        //        .ForMember(r => r.Recipes, cfg => cfg
-        //            .MapFrom(r => r.Recipes))
-        //        .ForMember(r => r.RecipesRemix, cfg => cfg
-        //            .MapFrom(r => r.RecipesRemix));
+        public ICollection<RecipeRemixOutputModel> RecipesRemix { get; set; }
 
     }
 }

@@ -47,6 +47,11 @@
         public async Task<ActionResult> Details(int id)
         {
             var userId = this.currentUser.UserId;
+            var isChef = await this.chefs.IsChef(userId);
+            if (isChef == false)
+            {
+                return RedirectToAction("Create");
+            }
             var chefId = await this.chefs.GetIdByUser(userId);
             var chef = await this.chefs.GetDetails(chefId);
             return this.View(chef);
@@ -74,6 +79,12 @@
         [Authorize]
         public async Task<ActionResult> Create()
         {
+            var userId = this.currentUser.UserId;
+            var isChef = await this.chefs.IsChef(userId);
+            if (isChef ==true)
+            {
+                return RedirectToAction("Details");
+            }
             return this.View();
         }
 

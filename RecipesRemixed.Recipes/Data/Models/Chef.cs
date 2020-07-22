@@ -5,6 +5,12 @@
 
     public class Chef
     {
+
+        public Chef()
+        {
+            this.Recipes = new HashSet<Recipe>();
+            this.RecipesRemix = new HashSet<RecipeRemix>();
+        }
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -15,8 +21,8 @@
 
         public string UserId { get; set; }
 
-        public IEnumerable<Recipe> Recipes { get; set; } = new List<Recipe>();
+        public virtual ICollection<Recipe> Recipes { get; set; }
 
-        public IEnumerable<RecipeRemix> RecipesRemix { get; set; } = new List<RecipeRemix>();
+        public virtual ICollection<RecipeRemix> RecipesRemix { get; set; }
     }
 }

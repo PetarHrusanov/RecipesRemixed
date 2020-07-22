@@ -12,7 +12,7 @@
         private readonly RoleManager<IdentityRole> roleManager;
 
         public IdentityDataSeeder(
-            UserManager<User> userManager, 
+            UserManager<User> userManager,
             RoleManager<IdentityRole> roleManager)
         {
             this.userManager = userManager;

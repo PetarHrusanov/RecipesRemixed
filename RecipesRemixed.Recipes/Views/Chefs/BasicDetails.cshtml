@@ -21,4 +21,35 @@
         @Model.Biography
     </p>
 </div>
+<hr />
+@if (Model.Recipes.Count > 0)
+{
+    <ul class="list-group">
+        <li class="list-group-item active">Recipes</li>
+        @foreach (var recipe in Model.Recipes)
+        {
+            <li class="list-group-item">
+                <a href="/Recipes/@recipe.Id">
+                    @recipe.Name
+                </a>
+            </li>
+        }
+    </ul>
+}
+<hr />
+
+@if (Model.RecipesRemix.Count > 0)
+{
+    <ul class="list-group">
+        <li class="list-group-item active">RecipeRemixed</li>
+        @foreach (var recipe in Model.RecipesRemix)
+        {
+            <li class="list-group-item">
+                <a href="/RecipesRemix/@recipe.Id">
+                    @recipe.Name
+                </a>
+            </li>
+        }
+    </ul>
+}
 

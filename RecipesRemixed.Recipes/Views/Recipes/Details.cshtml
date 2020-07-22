@@ -53,7 +53,9 @@
     </table>
 </div>
 <div>
-    <p>Made By @Model.ChefName</p>
+    <a href="/Chefs/@Model.ChefId">
+        Made By @Model.ChefName
+    </a>
 </div>
 @if (Model.RecipesRemix.Count > 0)
 {
@@ -70,6 +72,6 @@
 @if (this.User.Identity.IsAuthenticated)
 {
     <div class="text-center">
-        @Html.ActionLink("ReMix", "Create", "RecipesRemix", new { id = 2 }, new { @class = "btn btn-primary btn-lg" })
+        @Html.ActionLink("ReMix", "Create", "RecipesRemix", new { id = Model.Id }, new { @class = "btn btn-primary btn-lg" })
     </div>
 }
