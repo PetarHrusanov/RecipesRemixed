@@ -1,8 +1,10 @@
 ﻿namespace RecipesRemixed.Recipes.Models.Recipes
 {
     using System;
+    using System.Collections.Generic;
     using RecipesRemixed.Recipes.Data.Models;
     using RecipesRemixed.Recipes.Data.Models.Enums;
+    using RecipesRemixed.Recipes.Models.RecipesRemix;
 
     public class MyRecipeOutputModel : IMapFrom<Recipe>
     {
@@ -29,6 +31,8 @@
         public string ChefId { get; set; }
 
         public string ChefName { get; set; }
+
+        public ICollection<RecipeRemixOutputModel> RecipesRemixed { get; set; } = new List<RecipeRemixOutputModel>();
 
         //public virtual void Mapping(Profile mapper)
         //    => mapper
