@@ -25,12 +25,25 @@
             this.currentUser = currentUser;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
 
             var recipeList = new RecipesAllViewModel
             {
                 Recipes = await this.recipes.GetAll<RecipeOutputModel>()
+            };
+
+            return this.View(recipeList);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Index(RecipesAllViewModel filterRecipes)
+        {
+
+            var recipeList = new RecipesAllViewModel
+            {
+                Recipes = await this.recipes.Filter(filterRecipes)
             };
 
             return this.View(recipeList);
@@ -52,16 +65,15 @@
         }
 
 
-        [HttpGet]
-        public async Task<ActionResult<RecipesSearchOutputModel>> Search(
-            [FromQuery] RecipesQuery query)
-        {
-            var carAdListings = await this.recipes.GetListings(query);
+        //[HttpGet]
+        //public async Task<ActionResult<RecipesSearchOutputModel>> Search(RecipesAllViewModel query)
+        //{
+        //    var carAdListings = await this.recipes.GetListings(query);
 
-            var totalPages = await this.recipes.Total(query);
+        //    var totalPages = await this.recipes.Total(query);
 
-            return new RecipesSearchOutputModel(carAdListings, query.Page, totalPages);
-        }
+        //    return new RecipesSearchOutputModel(carAdListings, query.Page, totalPages);
+        //}
 
         [HttpGet]
         [Route("Recipes/{id:int}")]

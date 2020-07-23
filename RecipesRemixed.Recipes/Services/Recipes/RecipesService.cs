@@ -96,18 +96,21 @@
 
         public async Task<IEnumerable<MyRecipeOutputModel>> Mine(int chefId, RecipesQuery query)
         {
-            //=> (await this.mapper
-            //       .ProjectTo<MyRecipeOutputModel>(this
-            //           .GetRecipeQuery(query, chefId))
-            //       .ToListAsync())
-            //       .Skip((query.Page - 1) * RecipesPerPage)
-            //       .Take(RecipesPerPage);
-
-            var recipes = await this.GetRecipeQuery(query, chefId).To<RecipeOutputModel>().ToListAsync();
-
-            return (IEnumerable<MyRecipeOutputModel>)recipes;
-
+            throw new System.NotImplementedException();
         }
+        //{
+        //    //=> (await this.mapper
+        //    //       .ProjectTo<MyRecipeOutputModel>(this
+        //    //           .GetRecipeQuery(query, chefId))
+        //    //       .ToListAsync())
+        //    //       .Skip((query.Page - 1) * RecipesPerPage)
+        //    //       .Take(RecipesPerPage);
+
+        //    //var recipes = await this.GetRecipeQuery(query, chefId).To<RecipeOutputModel>().ToListAsync();
+
+        //    return (IEnumerable<MyRecipeOutputModel>)recipes;
+
+        //}
 
         // da vidq modify kak se pravi v controller-a i da go izkaram 
         public Task<bool> Modify(RecipesInputModel recipeInput)
@@ -116,29 +119,67 @@
         }
 
         public async Task<int> Total(RecipesQuery query)
-            => await this
-                    .GetRecipeQuery(query)
-                    .CountAsync();
+        {
+            throw new System.NotImplementedException();
+        }
+        //=> await this
+        //        .GetRecipeQuery(query)
+        //        .CountAsync();
+
+        public async Task<IEnumerable<RecipeOutputModel>> Filter(RecipesAllViewModel recipesFilter)
+        {
+            var recipes = this.All();
+
+            if (recipesFilter.Name != null)
+            {
+                recipes = recipes.Where(c => c.Name.Contains(recipesFilter.Name));
+            }
+
+            if (recipesFilter.Ingredients != null)
+            {
+                recipes = recipes.Where(c => c.Ingredients.Contains(recipesFilter.Name));
+            }
+
+            if (recipesFilter.TypeOfDish != null)
+            {
+                recipes = recipes.Where(c => c.TypeOfDish.Equals(recipesFilter.TypeOfDish));
+            }
+
+            //if (recipesFilter.Vegan != null)
+            //{
+            //    recipes = recipes.Where(c => c.Vegan.Equals(recipesFilter.Vegan));
+            //}
+
+            //if (recipesFilter.Vegetarian != null)
+            //{
+            //    recipes = recipes.Where(c => c.Vegetarian.Equals(recipesFilter.Vegetarian));
+            //}
+
+            var chosenRecipes = await recipes.To<RecipeOutputModel>().ToListAsync();
+
+            return chosenRecipes;
+
+        }
 
         private IQueryable<Recipe> GetRecipeQuery(
-            RecipesQuery query, int? chefId = null)
+            RecipesAllViewModel query, int? chefId = null)
         {
             var dataQuery = this.All();
 
-            if (chefId.HasValue)
+            if (query.Name !=null)
             {
                 dataQuery = dataQuery.Where(c => c.ChefId == chefId);
             }
 
-            if (query.Vegan.HasValue)
-            {
-                dataQuery = dataQuery.Where(c => c.Vegan == query.Vegan);
-            }
+            //if (query.Vegan.HasValue)
+            //{
+            //    dataQuery = dataQuery.Where(c => c.Vegan == query.Vegan);
+            //}
 
-            if (query.Vegetarian.HasValue)
-            {
-                dataQuery = dataQuery.Where(c => c.Vegetarian == query.Vegetarian);
-            }
+            //if (query.Vegetarian.HasValue)
+            //{
+            //    dataQuery = dataQuery.Where(c => c.Vegetarian == query.Vegetarian);
+            //}
 
             if (!string.IsNullOrWhiteSpace(query.Ingredients))
             {

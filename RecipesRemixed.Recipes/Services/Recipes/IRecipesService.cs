@@ -21,6 +21,8 @@
 
         Task<IEnumerable<MyRecipeOutputModel>> Mine(int chefId, RecipesQuery query);
 
+        Task<IEnumerable<RecipeOutputModel>> Filter(RecipesAllViewModel query);
+
         Task<RecipeOutputModel> GetDetails(int id);
 
         Task<bool> Modify(RecipesInputModel recipeInput);
