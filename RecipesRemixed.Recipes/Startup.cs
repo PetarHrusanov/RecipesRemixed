@@ -21,6 +21,7 @@ namespace RecipesRemixed.Recipes
     using RecipesRemixed.Services.Mapping;
     using RecipesRemixed.Recipes.Data.Models;
     using System.Reflection;
+    using RecipesRemixed.Recipes.Services.Forum;
 
     public class Startup
     {
@@ -57,17 +58,10 @@ namespace RecipesRemixed.Recipes
                 .AddRefitClient<IIdentityService>()
                 .WithConfiguration(serviceEndpoints.Identity);
 
-            //services
-            //    .AddRefitClient<IStatisticsService>()
-            //    .WithConfiguration(serviceEndpoints.Statistics);
+            services
+                .AddRefitClient<IForumService>()
+                .WithConfiguration(serviceEndpoints.Forum);
 
-            //services
-            //    .AddRefitClient<IReviewService>()
-            //    .WithConfiguration(serviceEndpoints.Reviews);
-
-            //services
-            //     .AddRefitClient<IReviewsGatewayService>()
-            //     .WithConfiguration(serviceEndpoints.ReviewsGateway);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -108,10 +102,6 @@ namespace RecipesRemixed.Recipes
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
 
-                //endpoints.MapHealthChecks("/health", new HealthCheckOptions
-                //{
-                //    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                //});
             });
         }
     }

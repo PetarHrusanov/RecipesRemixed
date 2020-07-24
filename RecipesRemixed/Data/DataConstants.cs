@@ -9,5 +9,11 @@
             public const int MaxUrlLength = 2048;
             public const int Zero = 0;
         }
+
+        public class Chef
+        {
+            public const int MinNameLength = 2;
+            public const int MaxNameLength = 50;
+        }
     }
 }
