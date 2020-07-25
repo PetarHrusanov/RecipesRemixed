@@ -5,34 +5,50 @@
     using RecipesRemixed.Forum.Data.Models;
     using RecipesRemixed.Services;
     using RecipesRemixed.Forum.Data;
+    using RecipesRemixed.Forum.Models.Comments;
 
-    public class CommentsService : DataService<Comment>, ICommentsService
+    public class CommentsService :ICommentsService
     {
 
+        private readonly ForumDbContext db;
+
         public CommentsService(ForumDbContext db)
-            : base(db)
         {
+            this.db = db;
         }
 
-        public async Task Create(int postId, string userId, string content, int? parentId = null)
+        public async Task<int> Create(CommentCreateRoutingModel input)
         {
+            
             var comment = new Comment
             {
-                Content = content,
-                ParentId = parentId,
-                PostId = postId,
-                UserId = userId,
+                PostId = input.PostId,
+                Content = input.Content,
+                UserId = input.UserId,
+                ChefName = input.ChefName
             };
-            await this.Save(comment);
+            if (input.ParentId == 0)
+            {
+                comment.ParentId = null;
+            }
+            else if(input.ParentId!=0)
+            {
+                comment.ParentId = input.ParentId;
+            }
+            
+            await this.db.Comments.AddAsync(comment);
+            this.db.SaveChanges();
+            return comment.PostId;
         }
 
-        //public async Task<bool> IsInPostId(int commentId, int postId)
-        //{
-        //    var commentPostId = await Data.Set<Comment>().AsParallel().Where(x => x.Id == commentId)
-        //        .Select(x => x.PostId).FirstOrDefaultAsync();
+        public async Task<bool> IsInPostId(int commentId, int postId)
+        {
+            //var commentPostId = await Data.Set<Comment>().AsParallel().Where(x => x.Id == commentId)
+            //    .Select(x => x.PostId).FirstOrDefaultAsync();
 
 
-        //    return commentPostId == postId;
-        //}
+            //return commentPostId == postId;
+            return false;
+        }
     }
 }

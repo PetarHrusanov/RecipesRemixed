@@ -2,12 +2,13 @@
 {
     using System.Threading.Tasks;
     using RecipesRemixed.Forum.Data.Models;
+    using RecipesRemixed.Forum.Models.Comments;
     using RecipesRemixed.Services;
 
-    public interface ICommentsService : IDataService<Comment>
+    public interface ICommentsService
     {
-        Task Create(int postId, string userId, string content, int? parentId = null);
+        Task<int> Create(CommentCreateRoutingModel input);
 
-        //Task<bool> IsInPostIdAsync(int commentId, int postId);
+        Task<bool> IsInPostId(int commentId, int postId);
     }
 }

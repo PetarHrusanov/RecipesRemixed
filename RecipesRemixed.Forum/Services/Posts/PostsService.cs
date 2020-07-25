@@ -64,14 +64,15 @@
         public async Task<PostViewModel> GetById (int id)
         {
             var post = await this.db.Posts.Where(x => x.Id == id).FirstOrDefaultAsync();
+            var commentsToPost = await this.db.Comments.Where(p => p.PostId == post.Id).ToListAsync();
             var comments = new List<CommentOutputViewModel>();
-            foreach (var item in post.Comments)
+            foreach (var item in commentsToPost)
             {
                 var selskiCommentConvertor = new CommentOutputViewModel
                 {
                     ChefName = item.ChefName,
                     Content = item.Content,
-                    PostId = item.PostId
+                    ParentId = item.ParentId
                 };
                 comments.Add(selskiCommentConvertor);
             }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using RecipesRemixed.Recipes.Models.Comments;
 using RecipesRemixed.Recipes.Models.Identity;
 using RecipesRemixed.Recipes.Models.Posts;
 using Refit;
@@ -16,6 +17,9 @@ namespace RecipesRemixed.Recipes.Services.Forum
 
         [Post("/Forum/Create")]
         Task<PostViewModel> Create([Body] PostCreateRoutingModel inputModel);
+
+        [Post("/Forum/CreateComment")]
+        Task<int> CreateComment([Body] CommentCreateRoutingModel input);
 
         //[Post("/Identity/Register")]
         //Task<UserInputModel> Register([Body] UserInputModel loginInput);
