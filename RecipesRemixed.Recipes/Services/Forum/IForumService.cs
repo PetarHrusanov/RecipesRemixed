@@ -11,6 +11,9 @@ namespace RecipesRemixed.Recipes.Services.Forum
         [Get("/Forum/Index")]
         Task<PostsAllViewModel> Index();
 
+        [Get("/Forum/Details/{id}")]
+        Task<PostViewModel> Details(int id);
+
         //[Post("/Identity/Register")]
         //Task<UserInputModel> Register([Body] UserInputModel loginInput);
     }

@@ -13,7 +13,7 @@
 
         Task<int> CreateAsync(string title, string content, int categoryId, string userId);
 
-        T GetById<T>(int id);
+        Task<PostViewModel> GetById(int id);
 
     }
 }

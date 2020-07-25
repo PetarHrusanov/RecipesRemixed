@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace RecipesRemixed.Recipes.Models.Recipes
+﻿namespace RecipesRemixed.Recipes.Models.Recipes
 {
+    using System;
+    using System.Collections.Generic;
+
     public class RecipesOutputModel<TRecipeOutputModel>
     {
         protected RecipesOutputModel(

@@ -6,6 +6,7 @@
     using Microsoft.EntityFrameworkCore;
     using RecipesRemixed.Forum.Data;
     using RecipesRemixed.Forum.Data.Models;
+    using RecipesRemixed.Forum.Models.Comments;
     using RecipesRemixed.Forum.Models.Posts;
     using RecipesRemixed.Services;
     using RecipesRemixed.Services.Identity;
@@ -32,13 +33,17 @@
             {
                 var post = new PostViewModel
                 {
+                    Id = item.Id,
                     Title = item.Title,
                     Content = item.Content,
-                    ChefName = item.ChefName
+                    ChefName = item.ChefName,
+                    //Comments = (IEnumerable<PostCommentViewModel>)item.Comments,
+
                 };
                 shemi.Add(post);
             }
             return shemi;
+
         }
 
         public async Task<int> CreateAsync(string title, string content, int categoryId, string userId)
@@ -55,11 +60,31 @@
             return post.Id;
         }
 
-        public T GetById<T>(int id)
+        public async Task<PostViewModel> GetById (int id)
         {
-            var post = this.db.Posts.Where(x => x.Id == id)
-                .To<T>().FirstOrDefault();
-            return post;
+            var post = await this.db.Posts.Where(x => x.Id == id).FirstOrDefaultAsync();
+            var comments = new List<CommentOutputViewModel>();
+            foreach (var item in post.Comments)
+            {
+                var selskiCommentConvertor = new CommentOutputViewModel
+                {
+                    ChefName = item.ChefName,
+                    Content = item.Content,
+                    PostId = item.PostId
+                };
+                comments.Add(selskiCommentConvertor);
+            }
+            //var comments = post.Select(p => p.Comments);
+            var postView = new PostViewModel
+            {
+                Id = post.Id,
+                Title = post.Title,
+                Content = post.Content,
+                ChefName = post.ChefName,
+                Comments = comments
+            };
+
+            return postView;
         }
     }
 }
