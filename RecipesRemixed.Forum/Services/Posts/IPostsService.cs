@@ -11,7 +11,7 @@
 
         Task<IEnumerable<PostViewModel>> All();
 
-        Task<int> CreateAsync(string title, string content, int categoryId, string userId);
+        Task<int> CreateAsync(PostCreateRoutingModel post);
 
         Task<PostViewModel> GetById(int id);
 

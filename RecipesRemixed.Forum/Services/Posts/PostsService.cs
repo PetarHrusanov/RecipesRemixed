@@ -46,13 +46,14 @@
 
         }
 
-        public async Task<int> CreateAsync(string title, string content, int categoryId, string userId)
+        public async Task<int> CreateAsync(PostCreateRoutingModel postInput)
         {
             var post = new Post
             {
-                Content = content,
-                Title = title,
-                UserId = userId,
+                Content = postInput.Content,
+                Title = postInput.Title,
+                UserId = postInput.UserId,
+                ChefName = postInput.ChefName
             };
 
             await this.db.Posts.AddAsync(post);
