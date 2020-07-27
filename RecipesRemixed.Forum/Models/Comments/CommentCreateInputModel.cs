@@ -1,6 +1,7 @@
-﻿namespace RecipesRemixed.Forum.Models.Comments
+﻿using System;
+namespace RecipesRemixed.Forum.Models.Comments
 {
-    public class CommentCreateRoutingModel
+    public class CommentCreateInputModel
     {
         public int PostId { get; set; }
 
@@ -10,6 +11,6 @@
 
         public string UserId { get; set; }
 
-        //public string ChefName { get; set; }
+        public string ChefName { get; set; }
     }
 }

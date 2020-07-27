@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RecipesRemixed.Forum.Data;
 using RecipesRemixed.Forum.Services.Comments;
+using RecipesRemixed.Forum.Services.ForumUser;
 using RecipesRemixed.Forum.Services.Posts;
 using RecipesRemixed.Infrastructure;
 
@@ -32,7 +33,9 @@ namespace RecipesRemixed.Forum
                 .AddWebService<ForumDbContext>(this.Configuration)
                 //.AddUserStorage()
                 .AddTransient<IPostsService, PostsService>()
-                .AddTransient<ICommentsService, CommentsService>();
+                .AddTransient<ICommentsService, CommentsService>()
+                .AddTransient<IForumUserService, ForumUserService>();
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

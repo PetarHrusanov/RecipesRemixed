@@ -9,6 +9,6 @@ namespace RecipesRemixed.Recipes.Models.Posts
 
         public string UserId { get; set; }
 
-        public string ChefName { get; set; }
+        //public string ChefName { get; set; }
     }
 }

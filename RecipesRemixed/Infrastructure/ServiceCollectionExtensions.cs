@@ -5,6 +5,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using AutoMapper;
+    using MassTransit;
     //using MassTransit;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.EntityFrameworkCore;
@@ -89,37 +90,28 @@
             return services;
         }
 
-        //public static IServiceCollection AddAutoMapperProfile(
-        //    this IServiceCollection services,
-        //    Assembly assembly)
-        //    => services
-        //        .AddAutoMapper(
-        //            (_, config) => config
-        //                .AddProfile(new MappingProfile(assembly)),
-        //            Array.Empty<Assembly>());
+        public static IServiceCollection AddMessaging(
+            this IServiceCollection services,
+            params Type[] consumers)
+        {
+            services
+                .AddMassTransit(mt =>
+                {
+                    //consumers.ForEach(consumer => mt.AddConsumer(consumer));
 
-        //public static IServiceCollection AddMessaging(
-        //    this IServiceCollection services,
-        //    params Type[] consumers)
-        //{
-        //    services
-        //        .AddMassTransit(mt =>
-        //        {
-        //            consumers.ForEach(consumer => mt.AddConsumer(consumer));
+                    //mt.AddBus(bus => Bus.Factory.CreateUsingRabbitMq(rmq =>
+                    //{
+                    //    rmq.Host("localhost");
 
-        //            mt.AddBus(bus => Bus.Factory.CreateUsingRabbitMq(rmq =>
-        //            {
-        //                rmq.Host("localhost");
+                    //    consumers.ForEach(consumer => rmq.ReceiveEndpoint(consumer.FullName, endpoint =>
+                    //    {
+                    //        endpoint.ConfigureConsumer(bus, consumer);
+                    //    }));
+                    //}));
+                })
+                .AddMassTransitHostedService();
 
-        //                consumers.ForEach(consumer => rmq.ReceiveEndpoint(consumer.FullName, endpoint =>
-        //                {
-        //                    endpoint.ConfigureConsumer(bus, consumer);
-        //                }));
-        //            }));
-        //        })
-        //        .AddMassTransitHostedService();
-
-        //    return services;
-        //}
+            return services;
+        }
     }
 }

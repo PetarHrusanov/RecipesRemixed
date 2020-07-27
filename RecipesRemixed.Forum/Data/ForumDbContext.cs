@@ -15,6 +15,8 @@
 
         public DbSet<Post> Posts { get; set; }
 
+        public DbSet<ForumUser> Users { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

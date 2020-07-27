@@ -36,8 +36,7 @@
                     Id = item.Id,
                     Title = item.Title,
                     Content = item.Content,
-                    ChefName = item.ChefName,
-                    //Comments = (IEnumerable<PostCommentViewModel>)item.Comments,
+                    UserId = item.UserId
 
                 };
                 shemi.Add(post);
@@ -46,14 +45,13 @@
 
         }
 
-        public async Task<int> CreateAsync(PostCreateRoutingModel postInput)
+        public async Task<int> Create(PostCreateRoutingModel postInput)
         {
             var post = new Post
             {
                 Content = postInput.Content,
                 Title = postInput.Title,
                 UserId = postInput.UserId,
-                ChefName = postInput.ChefName
             };
 
             await this.db.Posts.AddAsync(post);
@@ -70,9 +68,11 @@
             {
                 var selskiCommentConvertor = new CommentOutputViewModel
                 {
-                    ChefName = item.ChefName,
+                    //ChefName = item.ChefName,
                     Content = item.Content,
-                    ParentId = item.ParentId
+                    ParentId = item.ParentId,
+                    UserId = item.UserId
+                    
                 };
                 comments.Add(selskiCommentConvertor);
             }
@@ -82,7 +82,8 @@
                 Id = post.Id,
                 Title = post.Title,
                 Content = post.Content,
-                ChefName = post.ChefName,
+                UserId = post.UserId,
+                //ChefName = post.ChefName,
                 Comments = comments
             };
 

@@ -12,6 +12,8 @@ namespace RecipesRemixed.Forum.Models.Comments
 
         public string Content { get; set; }
 
+        public string UserId { get; set; }
+
         //public string SanitizedContent => new HtmlSanitizer().Sanitize(this.Content);
 
         public string ChefName { get; set; }

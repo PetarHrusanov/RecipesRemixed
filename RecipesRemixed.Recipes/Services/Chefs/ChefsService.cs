@@ -73,7 +73,7 @@ namespace RecipesRemixed.Recipes.Services.Chefs
 
         public Task<int> GetIdByUser(
             string userId)
-            => this.FindByUser(userId, dealer => dealer.Id);
+            => this.FindByUser(userId, chef => chef.Id);
 
         public Task<Chef> FindByUser(string userId)
             => this.FindByUser(userId, chef => chef);

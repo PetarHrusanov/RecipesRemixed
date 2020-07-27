@@ -24,8 +24,7 @@
             {
                 PostId = input.PostId,
                 Content = input.Content,
-                UserId = input.UserId,
-                ChefName = input.ChefName
+                UserId = input.UserId
             };
             if (input.ParentId == 0)
             {
