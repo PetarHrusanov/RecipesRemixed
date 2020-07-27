@@ -11,10 +11,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RecipesRemixed.Forum.Data;
+using RecipesRemixed.Forum.Messages;
 using RecipesRemixed.Forum.Services.Comments;
 using RecipesRemixed.Forum.Services.ForumUser;
 using RecipesRemixed.Forum.Services.Posts;
 using RecipesRemixed.Infrastructure;
+using RecipesRemixed.Messages.ForumUser;
 
 namespace RecipesRemixed.Forum
 {
@@ -34,7 +36,8 @@ namespace RecipesRemixed.Forum
                 //.AddUserStorage()
                 .AddTransient<IPostsService, PostsService>()
                 .AddTransient<ICommentsService, CommentsService>()
-                .AddTransient<IForumUserService, ForumUserService>();
+                .AddTransient<IForumUserService, ForumUserService>()
+                .AddMessaging(typeof(ForumUserCreatedConsumer));
 
         }
 

@@ -1,9 +1,11 @@
 ﻿namespace RecipesRemixed.Recipes.Controller
 {
     using System.Threading.Tasks;
+    using MassTransit;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using RecipesRemixed.Controllers;
+    using RecipesRemixed.Messages.ForumUser;
     using RecipesRemixed.Recipes.Data.Models;
     using RecipesRemixed.Recipes.Models.Chefs;
     using RecipesRemixed.Recipes.Services.Chefs;
@@ -14,13 +16,16 @@
     {
         private readonly IChefsService chefs;
         private readonly ICurrentUserService currentUser;
+        private readonly IBus publisher;
 
         public ChefsController(
             IChefsService chefs,
-            ICurrentUserService currentUser)
+            ICurrentUserService currentUser,
+            IBus publisher)
         {
             this.chefs = chefs;
             this.currentUser = currentUser;
+            this.publisher = publisher;
         }
 
         [HttpGet]
@@ -94,8 +99,13 @@
         {
             var userId = this.currentUser.UserId;
             await this.chefs.CreateChef(input, userId);
-            var chefId = await GetChefId();
-            return this.RedirectToAction("Details", chefId);
+            var chef = await this.chefs.GetDetailsByUserId(userId);
+            await this.publisher.Publish(new ForumUserCreatedMessage
+            {
+                UserId = userId,
+                UserName = chef.Name
+            });
+            return this.RedirectToAction("Details", chef.Id);
         }
 
         [HttpGet]

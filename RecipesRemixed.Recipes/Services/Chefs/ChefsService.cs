@@ -78,6 +78,15 @@ namespace RecipesRemixed.Recipes.Services.Chefs
         public Task<Chef> FindByUser(string userId)
             => this.FindByUser(userId, chef => chef);
 
+        public async Task<ChefOutputModel> GetDetailsByUserId(string userId)
+        {
+            var chefOutput = await this.Data.Set<Chef>()
+                .Where(u => u.UserId == userId)
+                .To<ChefOutputModel>()
+                .FirstOrDefaultAsync();
+            return chefOutput;
+        }
+
         private async Task<T> FindByUser<T>(
             string userId,
             Expression<Func<Chef, T>> selector)

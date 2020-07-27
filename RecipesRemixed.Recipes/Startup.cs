@@ -48,7 +48,8 @@ namespace RecipesRemixed.Recipes
                 .AddTransient<IRecipesRemixService, RecipesRemixService>()
                 .AddMessaging()
                 .AddControllersWithViews(options => options
-                    .Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
+                    .Filters.Add(new AutoValidateAntiforgeryTokenAttribute()))
+                ;
 
 
             services.AddRazorPages();

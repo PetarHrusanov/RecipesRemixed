@@ -24,5 +24,7 @@
         Task<IEnumerable<ChefOutputModel>> GetAll();
 
         Task<ChefOutputModel> GetDetailsByRecipeId(int recipeId);
+
+        Task<ChefOutputModel> GetDetailsByUserId(string userId);
     }
 }

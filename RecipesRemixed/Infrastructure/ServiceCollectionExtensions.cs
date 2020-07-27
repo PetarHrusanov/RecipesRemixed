@@ -6,13 +6,11 @@
     using System.Threading.Tasks;
     using AutoMapper;
     using MassTransit;
-    //using MassTransit;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.IdentityModel.Tokens;
-    //using Models;
     using Services.Identity;
 
     public static class ServiceCollectionExtensions
@@ -46,7 +44,7 @@
             IConfiguration configuration)
             => services
                 .Configure<ApplicationSettings>(
-                    configuration.GetSection(nameof(ApplicationSettings)), 
+                    configuration.GetSection(nameof(ApplicationSettings)),
                     config => config.BindNonPublicProperties = true);
 
         public static IServiceCollection AddTokenAuthentication(
@@ -90,6 +88,15 @@
             return services;
         }
 
+        //public static IServiceCollection AddAutoMapperProfile(
+        //    this IServiceCollection services,
+        //    Assembly assembly)
+        //    => services
+        //        .AddAutoMapper(
+        //            (_, config) => config
+        //                .AddProfile(new MappingProfile(assembly)),
+        //            Array.Empty<Assembly>());
+
         public static IServiceCollection AddMessaging(
             this IServiceCollection services,
             params Type[] consumers)
@@ -97,17 +104,17 @@
             services
                 .AddMassTransit(mt =>
                 {
-                    //consumers.ForEach(consumer => mt.AddConsumer(consumer));
+                    consumers.ForEach(consumer => mt.AddConsumer(consumer));
 
-                    //mt.AddBus(bus => Bus.Factory.CreateUsingRabbitMq(rmq =>
-                    //{
-                    //    rmq.Host("localhost");
+                    mt.AddBus(bus => Bus.Factory.CreateUsingRabbitMq(rmq =>
+                    {
+                        rmq.Host("localhost");
 
-                    //    consumers.ForEach(consumer => rmq.ReceiveEndpoint(consumer.FullName, endpoint =>
-                    //    {
-                    //        endpoint.ConfigureConsumer(bus, consumer);
-                    //    }));
-                    //}));
+                        consumers.ForEach(consumer => rmq.ReceiveEndpoint(consumer.FullName, endpoint =>
+                        {
+                            endpoint.ConfigureConsumer(bus, consumer);
+                        }));
+                    }));
                 })
                 .AddMassTransitHostedService();
 
