@@ -25,7 +25,7 @@
 
         Task<RecipeOutputModel> GetDetails(int id);
 
-        Task<bool> Modify(RecipesInputModel recipeInput);
+        Task<int> Modify(RecipesEditModel recipeInput);
 
         Task<int> Total(RecipesQuery query);
 

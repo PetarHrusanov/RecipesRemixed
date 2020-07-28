@@ -71,19 +71,6 @@
             return this.RedirectToAction("Index");
         }
 
-
-        [HttpGet]
-        public async Task<ActionResult<RecipesSearchOutputModel>> Search(
-            [FromQuery] RecipesQuery query)
-        {
-            //var carAdListings = await this.recipesRemix.GetListings(query);
-
-            //var totalPages = await this.recipesRemix.Total(query);
-
-            //return new RecipesSearchOutputModel();
-            return this.RedirectToAction("Index");
-        }
-
         [HttpGet]
         [Route("RecipesRemix/{id:int}")]
         public async Task<ActionResult<RecipeOutputModel>> Details(int id)
@@ -157,28 +144,5 @@
             return this.RedirectToAction("Index");
         }
 
-
-        //[HttpPut]
-        //[Authorize]
-        //[Route(Id + PathSeparator + nameof(ChangeAvailability))]
-        //public async Task<ActionResult> ChangeAvailability(int id)
-        //{
-        //    var dealerId = await this.dealers.GetIdByUser(this.currentUser.UserId);
-
-        //    var dealerHasCar = await this.dealers.HasCarAd(dealerId, id);
-
-        //    if (!dealerHasCar)
-        //    {
-        //        return BadRequest(Result.Failure("You cannot edit this car ad."));
-        //    }
-
-        //    var carAd = await this.carAds.Find(id);
-
-        //    carAd.IsAvailable = !carAd.IsAvailable;
-
-        //    await this.carAds.Save(carAd);
-
-        //    return Result.Success;
-        //}
     }
 }

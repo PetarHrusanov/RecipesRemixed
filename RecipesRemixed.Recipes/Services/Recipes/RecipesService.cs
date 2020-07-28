@@ -113,9 +113,23 @@
         //}
 
         // da vidq modify kak se pravi v controller-a i da go izkaram 
-        public Task<bool> Modify(RecipesInputModel recipeInput)
+        public async Task<int> Modify(RecipesEditModel recipeInput)
         {
-            throw new System.NotImplementedException();
+            var recipe = await this.Data.Set<Recipe>()
+                .Where(r => r.Id == recipeInput.Id)
+                .FirstOrDefaultAsync();
+            recipe.Name = recipeInput.Name;
+            recipe.Ingredients = recipeInput.Ingredients;
+            recipe.Instructions = recipeInput.Instructions;
+            recipe.ImageUrl = recipeInput.ImageUrl;
+            recipe.Vegan = recipeInput.Vegan;
+            recipe.Vegetarian = recipeInput.Vegetarian;
+            recipe.TypeOfDish = recipeInput.TypeOfDish;
+            recipe.Calories = recipeInput.Calories;
+
+            this.Data.Update(recipe);
+            await this.Data.SaveChangesAsync();
+            return recipe.Id;
         }
 
         public async Task<int> Total(RecipesQuery query)
@@ -140,10 +154,10 @@
                 recipes = recipes.Where(c => c.Ingredients.Contains(recipesFilter.Name));
             }
 
-            if (recipesFilter.TypeOfDish != null)
-            {
-                recipes = recipes.Where(c => c.TypeOfDish.Equals(recipesFilter.TypeOfDish));
-            }
+            //if (recipesFilter.TypeOfDish != null)
+            //{
+            //    recipes = recipes.Where(c => (c.TypeOfDish).Equals(recipesFilter.TypeOfDish));
+            //}
 
             //if (recipesFilter.Vegan != null)
             //{
@@ -161,33 +175,33 @@
 
         }
 
-        private IQueryable<Recipe> GetRecipeQuery(
-            RecipesAllViewModel query, int? chefId = null)
-        {
-            var dataQuery = this.All();
+        //private IQueryable<Recipe> GetRecipeQuery(
+        //    RecipesAllViewModel query, int? chefId = null)
+        //{
+        //    var dataQuery = this.All();
 
-            if (query.Name !=null)
-            {
-                dataQuery = dataQuery.Where(c => c.ChefId == chefId);
-            }
+        //    if (query.Name !=null)
+        //    {
+        //        dataQuery = dataQuery.Where(c => c.ChefId == chefId);
+        //    }
 
-            //if (query.Vegan.HasValue)
-            //{
-            //    dataQuery = dataQuery.Where(c => c.Vegan == query.Vegan);
-            //}
+        //    //if (query.Vegan.HasValue)
+        //    //{
+        //    //    dataQuery = dataQuery.Where(c => c.Vegan == query.Vegan);
+        //    //}
 
-            //if (query.Vegetarian.HasValue)
-            //{
-            //    dataQuery = dataQuery.Where(c => c.Vegetarian == query.Vegetarian);
-            //}
+        //    //if (query.Vegetarian.HasValue)
+        //    //{
+        //    //    dataQuery = dataQuery.Where(c => c.Vegetarian == query.Vegetarian);
+        //    //}
 
-            if (!string.IsNullOrWhiteSpace(query.Ingredients))
-            {
-                dataQuery = dataQuery.Where(c => c
-                    .Ingredients.ToLower().Contains(query.Ingredients.ToLower()));
-            }
+        //    if (!string.IsNullOrWhiteSpace(query.Ingredients))
+        //    {
+        //        dataQuery = dataQuery.Where(c => c
+        //            .Ingredients.ToLower().Contains(query.Ingredients.ToLower()));
+        //    }
 
-            return dataQuery;
-        }
+        //    return dataQuery;
+        //}
     }
 }

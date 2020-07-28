@@ -1,8 +1,10 @@
 ﻿namespace RecipesRemixed.Recipes.Controllers
 {
     using System.Threading.Tasks;
+    using MassTransit;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using RecipesRemixed.Messages.Recipes;
     using RecipesRemixed.Recipes.Models.Recipes;
     using RecipesRemixed.Recipes.Services.Chefs;
     using RecipesRemixed.Recipes.Services.Recipes;
@@ -14,15 +16,19 @@
         private readonly IRecipesService recipes;
         private readonly IChefsService chefs;
         private readonly ICurrentUserService currentUser;
+        private readonly IBus publisher;
+       
 
         public RecipesController(
             IRecipesService recipes,
             IChefsService chefs,
-            ICurrentUserService currentUser)
+            ICurrentUserService currentUser,
+            IBus publisher)
         {
             this.recipes = recipes;
             this.chefs = chefs;
             this.currentUser = currentUser;
+            this.publisher = publisher;
         }
 
         [HttpGet]
@@ -59,21 +65,16 @@
         public async Task<ActionResult<RecipeOutputModel>> Create(RecipesInputModel input)
         {
             var chef = await this.chefs.FindByUser(this.currentUser.UserId);
-            await this.recipes.Create(input, chef.Id);
+            var recipeOutput = await this.recipes.Create(input, chef.Id);
+            await this.publisher.Publish(new RecipeCreatedMessage
+            {
+                Name = input.Name,
+                RecipeId = recipeOutput.Id
+            });
             return this.RedirectToAction("Index");
 
         }
 
-
-        //[HttpGet]
-        //public async Task<ActionResult<RecipesSearchOutputModel>> Search(RecipesAllViewModel query)
-        //{
-        //    var carAdListings = await this.recipes.GetListings(query);
-
-        //    var totalPages = await this.recipes.Total(query);
-
-        //    return new RecipesSearchOutputModel(carAdListings, query.Page, totalPages);
-        //}
 
         [HttpGet]
         [Route("Recipes/{id:int}")]

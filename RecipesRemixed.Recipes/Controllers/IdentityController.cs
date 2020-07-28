@@ -15,13 +15,11 @@
     {
 
         private readonly IIdentityService identityService;
-        //private readonly IMapper mapper;
 
         public IdentityController(IIdentityService identityService)
         { 
 
             this.identityService = identityService;
-            //this.mapper = mapper;
         }
 
         [HttpGet]
