@@ -26,6 +26,8 @@
     <Folder Include="Models\Comments\" />
     <Folder Include="Models\ForumUser\" />
     <Folder Include="Areas\" />
+    <Folder Include="Areas\Administration\Views\RecipesRemixed\" />
+    <Folder Include="Areas\Administration\Views\Chefs\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.5" />

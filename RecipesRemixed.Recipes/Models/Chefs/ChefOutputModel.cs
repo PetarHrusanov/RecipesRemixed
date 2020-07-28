@@ -22,6 +22,8 @@
 
         public string Biography { get; set; }
 
+        public string UserId { get; set; }
+
         public ICollection<RecipeOutputModel> Recipes { get; set; }
 
         public ICollection<RecipeRemixOutputModel> RecipesRemix { get; set; }

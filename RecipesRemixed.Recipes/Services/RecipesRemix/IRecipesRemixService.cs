@@ -24,8 +24,7 @@
 
         Task<RecipeRemixOutputModel> GetDetails(int id);
 
-        // da go napravq s edit model
-        Task<bool> Modify(RecipesRemixInputModel recipeInput);
+        Task<int> Modify(RecipesRemixEditModel recipeInput);
 
         Task<int> Total(RecipesQuery query);
 

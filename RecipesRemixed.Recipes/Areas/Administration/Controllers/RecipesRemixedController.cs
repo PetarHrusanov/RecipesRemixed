@@ -11,23 +11,23 @@ namespace RecipesRemixed.Recipes.Areas.Administration.Controllers
     using Microsoft.EntityFrameworkCore;
     using RecipesRemixed.Recipes.Data;
     using RecipesRemixed.Recipes.Models.Recipes;
+    using RecipesRemixed.Recipes.Models.RecipesRemix;
     using RecipesRemixed.Recipes.Services.Recipes;
+    using RecipesRemixed.Recipes.Services.RecipesRemix;
 
     public class RecipesRemixedController : AdministrationController
     {
-        private readonly RecipesDbContext db;
-        private readonly IRecipesService recipesService;
+        private readonly IRecipesRemixService recipesService;
 
-        public RecipesRemixedController(RecipesDbContext db, IRecipesService recipesService)
+        public RecipesRemixedController(IRecipesRemixService recipesService)
         {
-            this.db = db;
             this.recipesService = recipesService;
         }
 
         // Recipes Logic
         public async Task<IActionResult> Index()
         {
-            var recipes = await this.recipesService.GetAll<RecipeOutputModel>();
+            var recipes = await this.recipesService.GetAll<RecipeRemixOutputModel>();
             return this.View(recipes);
         }
 
@@ -38,7 +38,7 @@ namespace RecipesRemixed.Recipes.Areas.Administration.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(RecipesInputModel recipe)
+        public async Task<IActionResult> Create(RecipesRemixInputModel recipe)
         {
             await this.recipesService.Create(recipe, 1);
 
@@ -55,7 +55,7 @@ namespace RecipesRemixed.Recipes.Areas.Administration.Controllers
             }
 
             var recipe = await this.recipesService.GetDetails(id);
-            var newEdit = new RecipesEditModel
+            var newEdit = new RecipesRemixEditModel
             {
                 Id = recipe.Id,
                 Name = recipe.Name,
@@ -80,7 +80,7 @@ namespace RecipesRemixed.Recipes.Areas.Administration.Controllers
         [HttpPost]
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit([Bind("Id,Name,Instructions,ImageUrl,Vegan,Vegetarian,TypeOfDish,Allergies,Calories,Ingredients")]
-        RecipesEditModel recipe)
+        RecipesRemixEditModel recipe)
         {
             if (recipe.Id ==null)
             {

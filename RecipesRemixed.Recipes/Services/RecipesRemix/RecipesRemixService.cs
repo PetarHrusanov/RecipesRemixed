@@ -106,10 +106,23 @@
 
         }
 
-        // da vidq modify kak se pravi v controller-a i da go izkaram 
-        public Task<bool> Modify(RecipesRemixInputModel recipeInput)
+        public async Task<int> Modify(RecipesRemixEditModel recipeInput)
         {
-            throw new System.NotImplementedException();
+            var recipe = await this.Data.Set<RecipeRemix>()
+                .Where(r => r.Id == recipeInput.Id)
+                .FirstOrDefaultAsync();
+            recipe.Name = recipeInput.Name;
+            recipe.Ingredients = recipeInput.Ingredients;
+            recipe.Instructions = recipeInput.Instructions;
+            recipe.ImageUrl = recipeInput.ImageUrl;
+            recipe.Vegan = recipeInput.Vegan;
+            recipe.Vegetarian = recipeInput.Vegetarian;
+            recipe.TypeOfDish = recipeInput.TypeOfDish;
+            recipe.Calories = recipeInput.Calories;
+
+            this.Data.Update(recipe);
+            await this.Data.SaveChangesAsync();
+            return recipe.Id;
         }
 
         public async Task<int> Total(RecipesQuery query)

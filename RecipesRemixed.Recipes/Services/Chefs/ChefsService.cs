@@ -105,5 +105,36 @@ namespace RecipesRemixed.Recipes.Services.Chefs
             return chefData;
         }
 
+        public async Task<bool> Delete(int id)
+        {
+            var chef = await this.Data.Set<Chef>().FindAsync(id);
+
+            if (chef == null)
+            {
+                return false;
+            }
+
+            this.Data.Set<Chef>().Remove(chef);
+
+            await this.Data.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<int> Modify(ChefEditModel chefInput)
+        {
+            var chef = await this.Data.Set<Chef>()
+                .Where(r => r.Id == chefInput.Id)
+                .FirstOrDefaultAsync();
+            chef.Name = chefInput.Name;
+            chef.Qualification = chefInput.Qualification;
+            chef.Biography = chefInput.Biography;
+
+
+            this.Data.Update(chef);
+            await this.Data.SaveChangesAsync();
+            return chef.Id;
+        }
+
     }
 }

@@ -26,5 +26,9 @@
         Task<ChefOutputModel> GetDetailsByRecipeId(int recipeId);
 
         Task<ChefOutputModel> GetDetailsByUserId(string userId);
+
+        Task<bool> Delete(int id);
+
+        Task<int> Modify(ChefEditModel chefInput);
     }
 }
