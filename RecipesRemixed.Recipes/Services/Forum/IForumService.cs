@@ -1,13 +1,13 @@
-﻿using System;
-using System.Threading.Tasks;
-using RecipesRemixed.Recipes.Models.Comments;
-using RecipesRemixed.Recipes.Models.ForumUser;
-using RecipesRemixed.Recipes.Models.Identity;
-using RecipesRemixed.Recipes.Models.Posts;
-using Refit;
-
-namespace RecipesRemixed.Recipes.Services.Forum
+﻿namespace RecipesRemixed.Recipes.Services.Forum
 {
+    using System;
+    using System.Threading.Tasks;
+    using RecipesRemixed.Recipes.Models.Comments;
+    using RecipesRemixed.Recipes.Models.ForumUser;
+    using RecipesRemixed.Recipes.Models.Identity;
+    using RecipesRemixed.Recipes.Models.Posts;
+    using Refit;
+
     public interface IForumService
     {
         [Get("/Forum/Index")]

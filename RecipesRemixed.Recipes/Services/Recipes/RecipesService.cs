@@ -94,25 +94,12 @@
             return list;
         }
 
-        public async Task<IEnumerable<MyRecipeOutputModel>> Mine(int chefId, RecipesQuery query)
-        {
-            throw new System.NotImplementedException();
-        }
-        //{
-        //    //=> (await this.mapper
-        //    //       .ProjectTo<MyRecipeOutputModel>(this
-        //    //           .GetRecipeQuery(query, chefId))
-        //    //       .ToListAsync())
-        //    //       .Skip((query.Page - 1) * RecipesPerPage)
-        //    //       .Take(RecipesPerPage);
+        public async Task<IEnumerable<RecipeOutputModel>> Mine(int chefId)
+            => await this.Data.Set<Recipe>()
+                .Where(c => c.ChefId == chefId)
+                .To<RecipeOutputModel>()
+                .ToListAsync();
 
-        //    //var recipes = await this.GetRecipeQuery(query, chefId).To<RecipeOutputModel>().ToListAsync();
-
-        //    return (IEnumerable<MyRecipeOutputModel>)recipes;
-
-        //}
-
-        // da vidq modify kak se pravi v controller-a i da go izkaram 
         public async Task<int> Modify(RecipesEditModel recipeInput)
         {
             var recipe = await this.Data.Set<Recipe>()
@@ -136,9 +123,6 @@
         {
             throw new System.NotImplementedException();
         }
-        //=> await this
-        //        .GetRecipeQuery(query)
-        //        .CountAsync();
 
         public async Task<IEnumerable<RecipeOutputModel>> Filter(RecipesAllViewModel recipesFilter)
         {
@@ -174,34 +158,5 @@
             return chosenRecipes;
 
         }
-
-        //private IQueryable<Recipe> GetRecipeQuery(
-        //    RecipesAllViewModel query, int? chefId = null)
-        //{
-        //    var dataQuery = this.All();
-
-        //    if (query.Name !=null)
-        //    {
-        //        dataQuery = dataQuery.Where(c => c.ChefId == chefId);
-        //    }
-
-        //    //if (query.Vegan.HasValue)
-        //    //{
-        //    //    dataQuery = dataQuery.Where(c => c.Vegan == query.Vegan);
-        //    //}
-
-        //    //if (query.Vegetarian.HasValue)
-        //    //{
-        //    //    dataQuery = dataQuery.Where(c => c.Vegetarian == query.Vegetarian);
-        //    //}
-
-        //    if (!string.IsNullOrWhiteSpace(query.Ingredients))
-        //    {
-        //        dataQuery = dataQuery.Where(c => c
-        //            .Ingredients.ToLower().Contains(query.Ingredients.ToLower()));
-        //    }
-
-        //    return dataQuery;
-        //}
     }
 }

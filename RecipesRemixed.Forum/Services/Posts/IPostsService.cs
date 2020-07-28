@@ -15,5 +15,7 @@
 
         Task<PostViewModel> GetById(int id);
 
+        Task<IEnumerable<PostMineViewModel>> Mine(string userId);
+
     }
 }

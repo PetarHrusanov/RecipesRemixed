@@ -18,15 +18,15 @@
 
         Task<IEnumerable<T>> GetAll<T>();
 
-        Task<IEnumerable<RecipeRemixOutputModel>> GetListings(RecipesQuery query);
-
-        Task<IEnumerable<RecipeRemixOutputModel>> Mine(int chefId, RecipesQuery query);
+        Task<IEnumerable<RecipeRemixOutputModel>> Mine(int chefId);
 
         Task<RecipeRemixOutputModel> GetDetails(int id);
 
         Task<int> Modify(RecipesRemixEditModel recipeInput);
 
-        Task<int> Total(RecipesQuery query);
+        //Task<IEnumerable<RecipeRemixOutputModel>> GetListings(RecipesQuery query);
+
+        //Task<int> Total(RecipesQuery query);
 
     }
 }

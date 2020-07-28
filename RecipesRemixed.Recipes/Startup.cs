@@ -22,6 +22,7 @@ namespace RecipesRemixed.Recipes
     using RecipesRemixed.Recipes.Data.Models;
     using System.Reflection;
     using RecipesRemixed.Recipes.Services.Forum;
+    using RecipesRemixed.Recipes.Services.ForumGateway;
 
     public class Startup
     {
@@ -62,6 +63,10 @@ namespace RecipesRemixed.Recipes
             services
                 .AddRefitClient<IForumService>()
                 .WithConfiguration(serviceEndpoints.Forum);
+
+            services
+                .AddRefitClient<IForumGatewayService>()
+                .WithConfiguration(serviceEndpoints.ForumGateway);
 
         }
 

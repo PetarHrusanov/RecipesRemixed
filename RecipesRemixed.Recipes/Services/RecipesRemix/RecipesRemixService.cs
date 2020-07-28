@@ -40,7 +40,10 @@
             };
 
             await this.Save(recipe);
-            var output = await this.Data.Set<RecipeRemix>().Where(r => r.Id == recipe.Id).To<RecipeRemixOutputModel>().FirstOrDefaultAsync();
+            var output = await this.Data.Set<RecipeRemix>()
+                .Where(r => r.Id == recipe.Id)
+                .To<RecipeRemixOutputModel>()
+                .FirstOrDefaultAsync();
 
             return output;
         }
@@ -73,38 +76,17 @@
 
         }
 
-        public async Task<IEnumerable<RecipeRemixOutputModel>> GetListings(RecipesQuery query)
-        {
-            //=> (await this.mapper
-            //    .ProjectTo<RecipeOutputModel>(this
-            //        .GetRecipeQuery(query))
-            //    .ToListAsync())
-            //    .Skip((query.Page - 1) * RecipesPerPage)
-            //    .Take(RecipesPerPage);
-
-            throw new System.NotImplementedException();
-        }
-
         public async Task<IEnumerable<T>> GetAll<T>()
         {
             var list = await Data.Set<RecipeRemix>().To<T>().ToListAsync();
             return list;
         }
 
-        public async Task<IEnumerable<RecipeRemixOutputModel>> Mine(int chefId, RecipesQuery query)
-        {
-            //=> (await this.mapper
-            //       .ProjectTo<MyRecipeOutputModel>(this
-            //           .GetRecipeQuery(query, chefId))
-            //       .ToListAsync())
-            //       .Skip((query.Page - 1) * RecipesPerPage)
-            //       .Take(RecipesPerPage);
-
-            var recipes = await this.GetRecipeQuery(query, chefId).To<RecipeRemixOutputModel>().ToListAsync();
-
-            return (IEnumerable<RecipeRemixOutputModel>)recipes;
-
-        }
+        public async Task<IEnumerable<RecipeRemixOutputModel>> Mine(int chefId)
+        => await this.Data.Set<RecipeRemix>()
+                .Where(c => c.ChefId == chefId)
+                .To<RecipeRemixOutputModel>()
+                .ToListAsync();
 
         public async Task<int> Modify(RecipesRemixEditModel recipeInput)
         {
@@ -125,38 +107,10 @@
             return recipe.Id;
         }
 
-        public async Task<int> Total(RecipesQuery query)
-            => await this
-                    .GetRecipeQuery(query)
-                    .CountAsync();
+        //public async Task<int> Total(RecipesQuery query)
+        //    => await this
+        //            .GetRecipeQuery(query)
+        //            .CountAsync();
 
-        private IQueryable<RecipeRemix> GetRecipeQuery(
-            RecipesQuery query, int? chefId = null)
-        {
-            var dataQuery = this.All();
-
-            if (chefId.HasValue)
-            {
-                dataQuery = dataQuery.Where(c => c.ChefId == chefId);
-            }
-
-            if (query.Vegan.HasValue)
-            {
-                dataQuery = dataQuery.Where(c => c.Vegan == query.Vegan);
-            }
-
-            if (query.Vegetarian.HasValue)
-            {
-                dataQuery = dataQuery.Where(c => c.Vegetarian == query.Vegetarian);
-            }
-
-            if (!string.IsNullOrWhiteSpace(query.Ingredients))
-            {
-                dataQuery = dataQuery.Where(c => c
-                    .Ingredients.ToLower().Contains(query.Ingredients.ToLower()));
-            }
-
-            return dataQuery;
-        }
     }
 }

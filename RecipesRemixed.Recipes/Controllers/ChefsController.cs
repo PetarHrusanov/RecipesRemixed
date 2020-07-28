@@ -8,24 +8,38 @@
     using RecipesRemixed.Messages.ForumUser;
     using RecipesRemixed.Recipes.Data.Models;
     using RecipesRemixed.Recipes.Models.Chefs;
+    using RecipesRemixed.Recipes.Models.Mine;
+    using RecipesRemixed.Recipes.Models.Recipes;
     using RecipesRemixed.Recipes.Services.Chefs;
+    using RecipesRemixed.Recipes.Services.ForumGateway;
+    using RecipesRemixed.Recipes.Services.Recipes;
+    using RecipesRemixed.Recipes.Services.RecipesRemix;
     using RecipesRemixed.Services;
     using RecipesRemixed.Services.Identity;
 
     public class ChefsController : Controller
     {
         private readonly IChefsService chefs;
+        private readonly IRecipesService recipes;
+        private readonly IRecipesRemixService recipesRemixed;
         private readonly ICurrentUserService currentUser;
+        private readonly IForumGatewayService forumGatewayService;
         private readonly IBus publisher;
 
         public ChefsController(
             IChefsService chefs,
+            IRecipesService recipes,
+            IRecipesRemixService recipesRemixed,
             ICurrentUserService currentUser,
+            IForumGatewayService forumGatewayService,
             IBus publisher)
         {
             this.chefs = chefs;
+            this.recipes = recipes;
             this.currentUser = currentUser;
             this.publisher = publisher;
+            this.recipesRemixed = recipesRemixed;
+            this.forumGatewayService = forumGatewayService;
         }
 
         [HttpGet]
@@ -141,5 +155,35 @@
 
             return RedirectToAction("Details", new { id = chef.Id});
         }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult> Mine()
+        {
+            var userId = this.currentUser.UserId;
+            var isChef = await this.chefs.IsChef(userId);
+            if (isChef == false)
+            {
+                return RedirectToAction("Create");
+            }
+            var chefId = await this.chefs.GetIdByUser(userId);
+            var chef = await this.chefs.GetDetails(chefId);
+            var recipesView = await this.recipes.Mine(chefId);
+            var recipesRemixedView = await this.recipesRemixed.Mine(chefId);
+
+            var forumPosts = await this.forumGatewayService.Mine();
+
+            var Mine = new MineOutputModel
+            {
+                Chef = chef,
+                Recipes = recipesView,
+                RecipesRemixed = recipesRemixedView,
+                Posts = forumPosts
+
+            };
+
+            return this.View(Mine);
+        }
+
     }
 }

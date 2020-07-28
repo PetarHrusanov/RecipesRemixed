@@ -19,7 +19,7 @@
 
         Task<IEnumerable<RecipeOutputModel>> GetListings(RecipesQuery query);
 
-        Task<IEnumerable<MyRecipeOutputModel>> Mine(int chefId, RecipesQuery query);
+        Task<IEnumerable<RecipeOutputModel>> Mine(int chefId);
 
         Task<IEnumerable<RecipeOutputModel>> Filter(RecipesAllViewModel query);
 

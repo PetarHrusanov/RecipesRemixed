@@ -89,5 +89,13 @@
 
             return postView;
         }
+
+        public async Task<IEnumerable<PostMineViewModel>> Mine(string userId)
+            => await this
+                    .db
+                    .Posts
+                    .Where(d => d.UserId == userId)
+                    .To<PostMineViewModel>()
+                    .ToListAsync();
     }
 }

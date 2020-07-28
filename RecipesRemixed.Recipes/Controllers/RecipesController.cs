@@ -5,6 +5,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using RecipesRemixed.Messages.Recipes;
+    using RecipesRemixed.Recipes.Models.Mine;
     using RecipesRemixed.Recipes.Models.Recipes;
     using RecipesRemixed.Recipes.Services.Chefs;
     using RecipesRemixed.Recipes.Services.Recipes;
@@ -132,19 +133,19 @@
             return await this.recipes.Delete(id);
         }
 
-        [HttpGet]
-        [Authorize]
-        [Route(nameof(Mine))]
-        public async Task<ActionResult<MyRecipesOutputModel>> Mine(
-            [FromQuery] RecipesQuery query)
-        {
-            var chefId = await this.chefs.GetIdByUser(this.currentUser.UserId);
+        //[HttpGet]
+        //[Authorize]
+        //[Route(nameof(Mine))]
+        //public async Task<ActionResult<MineOutputModel>> Mine(
+        //    [FromQuery] RecipesQuery query)
+        //{
+        //    var chefId = await this.chefs.GetIdByUser(this.currentUser.UserId);
 
-            var recipesListings = await this.recipes.Mine(chefId, query);
+        //    var recipesListings = await this.recipes.Mine(chefId, query);
 
-            var totalPages = await this.recipes.Total(query);
+        //    var totalPages = await this.recipes.Total(query);
 
-            return new MyRecipesOutputModel(recipesListings, query.Page, totalPages);
-        }
+        //    return new MyRecipesOutputModel(recipesListings, query.Page, totalPages);
+        //}
     }
 }

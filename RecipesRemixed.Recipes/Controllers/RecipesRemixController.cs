@@ -127,22 +127,22 @@
             return await this.recipesRemix.Delete(id);
         }
 
-        [HttpGet]
-        [Authorize]
-        [Route(nameof(Mine))]
-        public async Task<ActionResult<MyRecipesOutputModel>> Mine(
-            [FromQuery] RecipesQuery query)
-        {
-            var chefId = await this.chefs.GetIdByUser(this.currentUser.UserId);
+        //[HttpGet]
+        //[Authorize]
+        //[Route(nameof(Mine))]
+        //public async Task<ActionResult<MyRecipesOutputModel>> Mine(
+        //    [FromQuery] RecipesQuery query)
+        //{
+        //    var chefId = await this.chefs.GetIdByUser(this.currentUser.UserId);
 
-            var recipesListings = await this.recipesRemix.Mine(chefId, query);
+        //    var recipesListings = await this.recipesRemix.Mine(chefId, query);
 
-            var totalPages = await this.recipesRemix.Total(query);
+        //    var totalPages = await this.recipesRemix.Total(query);
 
-            //return new MyRecipesOutputModel(recipesListings, query.Page, totalPages);
+        //    //return new MyRecipesOutputModel(recipesListings, query.Page, totalPages);
 
-            return this.RedirectToAction("Index");
-        }
+        //    return this.RedirectToAction("Index");
+        //}
 
     }
 }
