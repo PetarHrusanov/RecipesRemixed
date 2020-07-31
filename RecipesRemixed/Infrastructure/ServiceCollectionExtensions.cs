@@ -3,14 +3,17 @@
     using System;
     using System.Reflection;
     using System.Text;
-    using System.Threading.Tasks;
     using AutoMapper;
+    using GreenPipes;
+    using Hangfire;
     using MassTransit;
+    using Messages;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.IdentityModel.Tokens;
+    //using Models;
     using Services.Identity;
 
     public static class ServiceCollectionExtensions
@@ -24,6 +27,7 @@
                 .AddDatabase<TDbContext>(configuration)
                 .AddApplicationSettings(configuration)
                 .AddTokenAuthentication(configuration)
+                .AddHealth(configuration)
                 //.AddAutoMapperProfile(Assembly.GetCallingAssembly())
                 .AddControllers();
 
@@ -37,14 +41,20 @@
             => services
                 .AddScoped<DbContext, TDbContext>()
                 .AddDbContext<TDbContext>(options => options
-                    .UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+                    .UseSqlServer(
+                        configuration.GetDefaultConnectionString(),
+                        sqlOptions => sqlOptions
+                            .EnableRetryOnFailure(
+                                maxRetryCount: 10,
+                                maxRetryDelay: TimeSpan.FromSeconds(30),
+                                errorNumbersToAdd: null)));
 
         public static IServiceCollection AddApplicationSettings(
             this IServiceCollection services,
             IConfiguration configuration)
             => services
                 .Configure<ApplicationSettings>(
-                    configuration.GetSection(nameof(ApplicationSettings)),
+                    configuration.GetSection(nameof(ApplicationSettings)), 
                     config => config.BindNonPublicProperties = true);
 
         public static IServiceCollection AddTokenAuthentication(
@@ -96,6 +106,21 @@
         //            (_, config) => config
         //                .AddProfile(new MappingProfile(assembly)),
         //            Array.Empty<Assembly>());
+
+        public static IServiceCollection AddHealth(
+            this IServiceCollection services,
+            IConfiguration configuration)
+        {
+            var healthChecks = services.AddHealthChecks();
+
+            healthChecks
+                .AddSqlServer(configuration.GetDefaultConnectionString());
+            
+            healthChecks
+                .AddRabbitMQ(rabbitConnectionString: "amqp://rabbitmq:rabbitmq@rabbitmq/");
+
+            return services;
+        }
 
         public static IServiceCollection AddMessaging(
             this IServiceCollection services,

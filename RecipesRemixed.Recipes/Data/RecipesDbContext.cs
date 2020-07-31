@@ -3,9 +3,10 @@
     using System;
     using System.Reflection;
     using Microsoft.EntityFrameworkCore;
+    using RecipesRemixed.Data;
     using RecipesRemixed.Recipes.Data.Models;
 
-    public class RecipesDbContext :DbContext
+    public class RecipesDbContext : MessageDbContext
     {
         public RecipesDbContext(DbContextOptions<RecipesDbContext> options)
             : base(options)
@@ -18,11 +19,6 @@
 
         public DbSet<RecipeRemix> RecipesRemix { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
-            base.OnModelCreating(builder);
-        }
+        protected override Assembly ConfigurationsAssembly => Assembly.GetExecutingAssembly();
     }
 }

@@ -2,12 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Metadata.Builders;
     using RecipesRemixed.Recipes.Data.Models;
     using static DataConstants.Chef;
     using static DataConstants.Recipes;
 
     internal class ChefConfiguration
+        : IEntityTypeConfiguration<Chef>
     {
         public void Configure(EntityTypeBuilder<Chef> builder)
         {

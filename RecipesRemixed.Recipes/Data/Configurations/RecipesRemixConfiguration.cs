@@ -8,6 +8,7 @@
     using static DataConstants.Recipes;
 
     internal class RecipesRemixConfiguration
+        : IEntityTypeConfiguration<RecipeRemix>
     {
         public void Configure(EntityTypeBuilder<RecipeRemix> builder)
         {
